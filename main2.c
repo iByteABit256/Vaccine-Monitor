@@ -8,7 +8,7 @@ int main(void){
     
     srand(time(NULL));
 
-    Skiplist skip = newSkiplist(20, 0.1);
+    Skiplist skip = newSkiplist(20, 0.5);
 
     skipInsert(skip, "Bob");
     skipInsert(skip, "Alice");
@@ -19,7 +19,7 @@ int main(void){
     skipInsert(skip, "Jape");
     skipInsert(skip, "Kapia");
 
-    printSkiplist(skip);
+    skipPrint(skip);
 
     return 0;
 }

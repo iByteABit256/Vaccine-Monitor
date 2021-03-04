@@ -11,13 +11,13 @@ struct skiplist_struct{
     int maxlvl;
     float p;
     int lvl;
-    skipNode header;
+    skipNode dummy;
 };
 
 typedef struct skiplist_struct *Skiplist;
 
 Skiplist newSkiplist(int, float);
-int randomLevel(Skiplist);
+int coinToss(Skiplist);
 void skipInsert(Skiplist, char *);
-void printSkiplist(Skiplist);
+void skipPrint(Skiplist);
 

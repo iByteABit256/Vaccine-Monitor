@@ -10,6 +10,7 @@ skipNode newSkipNode(char *key, int lvl){
     // Pass by reference to save memory
     node->key = key;
 
+    // Allocate forward array and initialize to zero 
     node->forward = malloc(sizeof(skipNode *)*(lvl+1));
     memset(node->forward, 0, sizeof(skipNode *)*(lvl+1));
 
@@ -24,13 +25,13 @@ Skiplist newSkiplist(int maxlvl, float p){
     sl->maxlvl = maxlvl;
     sl->p = p;
     sl->lvl = 0;
-    sl->header = newSkipNode(NULL, maxlvl);    
+    sl->dummy = newSkipNode(NULL, maxlvl);
 
     return sl;
 }
 
 // Random amount of levels for skiplist node
-int randomLevel(Skiplist sl){
+int coinToss(Skiplist sl){
     // Coin toss
     float toss = (float)rand()/(float)RAND_MAX;
 
@@ -39,7 +40,7 @@ int randomLevel(Skiplist sl){
     // Toss until failure or max level reached
     while(toss < sl->p && lvl < sl->maxlvl){
         lvl++;
-        float toss = (float)rand()/(float)RAND_MAX;
+        toss = (float)rand()/(float)RAND_MAX;
     }
 
     return lvl;
@@ -49,9 +50,9 @@ int randomLevel(Skiplist sl){
 void skipInsert(Skiplist sl, char *key){
 
     // Current node
-    skipNode curr = sl->header; 
+    skipNode curr = sl->dummy; 
 
-    // Directory that keeps track of each level 
+    // Directory that keeps track of each level
     skipNode dir[sl->maxlvl+1];
     memset(dir, 0, sizeof(skipNode)*(sl->maxlvl+1));
 
@@ -69,11 +70,11 @@ void skipInsert(Skiplist sl, char *key){
     if(curr == NULL || strcmp(curr->key, key)){
 
         // Start coin tossing to determine node level
-        int rand_level = randomLevel(sl);
+        int rand_level = coinToss(sl);
 
         if(rand_level > sl->lvl){
             for(int i = sl->lvl+1; i <= rand_level; i++){
-                dir[i] = sl->header;
+                dir[i] = sl->dummy;
             }
 
             sl->lvl = rand_level;
@@ -91,7 +92,7 @@ void skipInsert(Skiplist sl, char *key){
 }
 
 // Prints skiplist
-void printSkiplist(Skiplist sl){
+void skipPrint(Skiplist sl){
 
     /*
      * Format:
@@ -104,7 +105,7 @@ void printSkiplist(Skiplist sl){
     */
 
     for(int i = sl->lvl; i >= 0; i--){
-        skipNode node = sl->header->forward[i];
+        skipNode node = sl->dummy->forward[i];
         
         while(node != NULL){
             printf("%s", node->key);
