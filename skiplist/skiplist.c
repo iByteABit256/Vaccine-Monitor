@@ -17,6 +17,11 @@ skipNode newSkipNode(char *key, int lvl){
     return node;
 }
 
+// Destroys skip node
+void destroySkipNode(skipNode sn){
+    free(sn->forward);
+}
+
 // Constructs new skip list with given maximum level and
 // coin toss heads probability
 Skiplist newSkiplist(int maxlvl, float p){
@@ -88,6 +93,82 @@ void skipInsert(Skiplist sl, char *key){
             node->forward[i] = dir[i]->forward[i];
             dir[i]->forward[i] = node;
         }
+    }else{
+        fprintf(stderr, "Node with key %s already exists in skiplist\n", key);
+    }
+}
+
+// Check if node exists in skiplist
+int skipExists(Skiplist sl, char *key){
+
+    // Current node
+    skipNode curr = sl->dummy; 
+
+    // Directory that keeps track of each level
+    skipNode dir[sl->maxlvl+1];
+    memset(dir, 0, sizeof(skipNode)*(sl->maxlvl+1));
+
+    // Set every new level to dummy and update level variable
+    for(int i = sl->lvl; i >= 0; i--){
+        while(curr->forward[i] != NULL && strcmp(curr->forward[i]->key, key) < 0){
+            curr = curr->forward[i]; 
+        }
+        dir[i] = curr;
+    }
+
+    // Check next node of level 0
+    curr = curr->forward[0];
+
+    // If end of level, or before a different node then it doesn't exist
+    return !(curr == NULL || strcmp(curr->key, key));
+}
+
+// Deletes node from skiplist
+void skipDelete(Skiplist sl, char *key){
+
+    // Current node
+    skipNode curr = sl->dummy; 
+
+    // Directory that keeps track of each level
+    skipNode dir[sl->maxlvl+1];
+    memset(dir, 0, sizeof(skipNode)*(sl->maxlvl+1));
+
+    for(int i = sl->lvl; i >= 0; i--){
+        while(curr->forward[i] != NULL && strcmp(curr->forward[i]->key, key) < 0){
+            curr = curr->forward[i]; 
+        }
+        dir[i] = curr;
+    }
+
+    // Check next node of level 0
+    curr = curr->forward[0];
+
+    // If current is not null and has same key, then delete it
+    if(curr != NULL && strcmp(curr->key, key) == 0){
+
+        // Update forward nodes and free
+        for(int i = 0; i <= sl->lvl; i++){
+            if(dir[i]->forward[i] == curr){
+                dir[i]->forward[i] = curr->forward[i];
+            }
+        }
+        destroySkipNode(curr);
+        free(curr);
+    }else{
+        fprintf(stderr, "Node with key %s doesn't exist in skiplist\n", key);
+    }
+}
+
+// Destroys skiplist
+void skipDestroy(Skiplist sl){
+
+    // Traverse bottom level and delete every node
+    skipNode curr = sl->dummy;
+    while(curr != NULL){
+        skipNode next = curr->forward[0];
+        destroySkipNode(curr);
+        free(curr);
+        curr = next;
     }
 }
 

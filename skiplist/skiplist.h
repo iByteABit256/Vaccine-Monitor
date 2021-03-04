@@ -6,6 +6,7 @@ struct node_struct{
 typedef struct node_struct *skipNode;
 
 skipNode newSkipNode(char *, int);
+void destroySkipNode(skipNode);
 
 struct skiplist_struct{
     int maxlvl;
@@ -19,5 +20,8 @@ typedef struct skiplist_struct *Skiplist;
 Skiplist newSkiplist(int, float);
 int coinToss(Skiplist);
 void skipInsert(Skiplist, char *);
+int skipExists(Skiplist, char *);
+void skipDelete(Skiplist, char *);
+void skipDestroy(Skiplist);
 void skipPrint(Skiplist);
 

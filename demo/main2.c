@@ -21,6 +21,28 @@ int main(void){
 
     skipPrint(skip);
 
+    skipInsert(skip, "Katia");
+
+    if(skipExists(skip, "Katia")){
+        printf("Katia exists <3\n");
+    }else{
+        printf("Katia doesn't exist ;.;\n");
+    }
+
+    skipDelete(skip, "Katia");
+
+    if(skipExists(skip, "Katia")){
+        printf("Katia exists <3\n");
+    }else{
+        printf("Katia doesn't exist ;.;\n");
+    }
+
+    skipPrint(skip);
+
+    skipDestroy(skip);
+
+    free(skip);
+
     return 0;
 }
 
