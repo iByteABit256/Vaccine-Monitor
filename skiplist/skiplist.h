@@ -1,3 +1,5 @@
+#pragma once
+
 struct node_struct{
     char *key;
     struct node_struct **forward;

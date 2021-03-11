@@ -1,3 +1,5 @@
+#pragma once
+
 struct bloomstr{
     unsigned char *bloom;
     unsigned int size;
