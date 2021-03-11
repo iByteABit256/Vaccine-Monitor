@@ -3,6 +3,7 @@
 #include <string.h>
 #include "skiplist.h"
 
+
 // Constructs new skip node
 skipNode newSkipNode(char *key, int lvl){
     skipNode node = malloc(sizeof(struct node_struct)); 

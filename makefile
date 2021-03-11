@@ -13,13 +13,13 @@ LFLAGS =
 LIBS =
   
 # the name to use for both the target source file, and the output file:
-TARGET = main
+TARGET = vaccineMonitor
 
 # source files
-SRC = main.c hash/hash.c bloomfilter/bloomfilter.c
+SRC = vaccineMonitor.c hash/hash.c bloomfilter/bloomfilter.c
 
 # object files
-OBJ = main.o hash.o bloomfilter.o
+OBJ = vaccineMonitor.o hash.o bloomfilter.o
 
 # make all by default
 default: all
@@ -33,8 +33,8 @@ $(TARGET): $(OBJ)
 # make object files
 bloomfilter.o: bloomfilter/bloomfilter.c hash/hash.h
 	$(CC) $(CFLAGS) -c bloomfilter/bloomfilter.c
-main.o: main.c bloomfilter/bloomfilter.h
-	$(CC) $(CFLAGS) -c main.c
+vaccineMonitor.o: vaccineMonitor.c bloomfilter/bloomfilter.h
+	$(CC) $(CFLAGS) -c vaccineMonitor.c
 hash.o: hash/hash.c
 	$(CC) $(CFLAGS) -c hash/hash.c
 
