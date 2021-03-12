@@ -69,7 +69,7 @@ HTHash HTInsert(HTHash hash, char *key, HTItem item){
 		free(entry);
 		return NULL;
 	}
-	double loadratio = HTSize(hash)/hash->curSize;
+	double loadratio = (float)HTSize(hash)/(float)hash->curSize;
 	if(loadratio >= 0.9){
 		//free(entry);
 		hash->ht = realloc(hash->ht, sizeof(Listptr)*2*hash->curSize);
@@ -82,7 +82,7 @@ HTHash HTInsert(HTHash hash, char *key, HTItem item){
 }
 
 int HTSize(HTHash hash){
-	if(!hash->curSize) return 0;
+	if(hash->curSize == 0) return 0;
 	int size = 0;
 	for(int i = 0; i < hash->curSize; i++){
 		size += ListSize(hash->ht[i]);	
@@ -99,6 +99,13 @@ int HTGet(HTHash hash, char *key, HTItem *itemptr){
 	}else{
 		return 0;
 	}
+}
+
+int HTExists(HTHash hash, char *key){
+	int index = HTHashFunction(key, hash->curSize);
+	Listptr list = ListSearchKey(hash->ht[index], key);
+
+    return list != NULL;
 }
 
 void HTRemove(HTHash hash, char *key){
@@ -146,3 +153,4 @@ HTItem HTGetItem(HTHash hash, char *key){
 		return NULL;
 	}
 }
+

@@ -18,7 +18,7 @@ struct hthash{
 typedef struct hthash *HTHash;
 
 #else
-#include "lists.h"
+#include "../lists/lists.h"
 
 struct hthash{
 	int curSize;

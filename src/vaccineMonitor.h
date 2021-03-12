@@ -1,5 +1,5 @@
-#include "bloomfilter/bloomfilter.h" 
-#include "skiplist/skiplist.h"
+#include "../lib/bloomfilter/bloomfilter.h" 
+#include "../lib/skiplist/skiplist.h"
 
 struct virusstr{
     BloomFilter vaccinated_bloom;
@@ -11,8 +11,8 @@ typedef struct virusstr *Virus;
 
 struct personstr{
     char *citizenID;
-    int firstName;
-    int lastName;
+    char *firstName;
+    char *lastName;
     int countryCode; // Hashed country name
     int age;
 };
