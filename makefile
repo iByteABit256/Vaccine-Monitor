@@ -16,10 +16,11 @@ LIBS =
 TARGET = vaccineMonitor
 
 # source files
-SRC = vaccineMonitor.c hash/hash.c bloomfilter/bloomfilter.c
+SRC = src/vaccineMonitor.c src/main.c lib/hash/hash.c lib/bloomfilter/bloomfilter.c\
+	  lib/lists/lists.c lib/skiplist/skiplist.c lib/hashtable/hashtable.c
 
 # object files
-OBJ = vaccineMonitor.o hash.o bloomfilter.o
+OBJ = vaccineMonitor.o main.o hash.o bloomfilter.o lists.o skiplist.o hashtable.o
 
 # make all by default
 default: all
@@ -31,12 +32,21 @@ $(TARGET): $(OBJ)
 	$(CC) $(LFLAGS) $(CFLAGS) -o $(TARGET) $(OBJ) $(LIBS)
 
 # make object files
-bloomfilter.o: bloomfilter/bloomfilter.c hash/hash.h
-	$(CC) $(CFLAGS) -c bloomfilter/bloomfilter.c
-vaccineMonitor.o: vaccineMonitor.c bloomfilter/bloomfilter.h
-	$(CC) $(CFLAGS) -c vaccineMonitor.c
-hash.o: hash/hash.c
-	$(CC) $(CFLAGS) -c hash/hash.c
+bloomfilter.o: lib/bloomfilter/bloomfilter.c lib/hash/hash.h
+	$(CC) $(CFLAGS) -c lib/bloomfilter/bloomfilter.c
+vaccineMonitor.o: src/vaccineMonitor.c lib/bloomfilter/bloomfilter.h
+	$(CC) $(CFLAGS) -c src/vaccineMonitor.c
+hash.o: lib/hash/hash.c
+	$(CC) $(CFLAGS) -c lib/hash/hash.c
+main.o: src/main.c lib/skiplist/skiplist.h\
+	lib/bloomfilter/bloomfilter.h lib/hashtable/htInterface.h src/vaccineMonitor.h
+	$(CC) $(CFLAGS) -c src/main.c
+lists.o: lib/lists/lists.c
+	$(CC) $(CFLAGS) -c lib/lists/lists.c
+skiplist.o: lib/skiplist/skiplist.c
+	$(CC) $(CFLAGS) -c lib/skiplist/skiplist.c
+hashtable.o: lib/hashtable/hashtable.c lib/lists/lists.h
+	$(CC) $(CFLAGS) -c lib/hashtable/hashtable.c
 
 # clean up
 clean:

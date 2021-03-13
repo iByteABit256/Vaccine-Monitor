@@ -19,3 +19,20 @@ struct personstr{
 
 typedef struct personstr *Person;
 
+struct datestr{
+    unsigned int day;
+    unsigned int month;
+    unsigned int year;
+};
+
+typedef struct datestr *Date;
+
+struct vaccrecstr{
+    Person per;
+    Date date;
+};
+
+typedef struct vaccrecstr *VaccRecord;
+
+void insertCitizenRecord(VaccRecord, Virus);
+

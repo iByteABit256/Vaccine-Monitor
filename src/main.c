@@ -56,37 +56,77 @@ int main(int argc, char *argv[]){
     char *buf = malloc(MAX_LINE*sizeof(char));
     memset(buf, 0, MAX_LINE);
 
+    // Read input file
     while(fgets(buf, MAX_LINE, inputFile) != NULL){
         Person per = malloc(sizeof(struct personstr));  
         char *token = strtok(buf, " ");
         
+        // citizen ID
         per->citizenID = malloc((strlen(token)+1)*sizeof(char));
         strcpy(per->citizenID, token);
 
+        // first name
         token = strtok(NULL, " ");
         per->firstName = malloc((strlen(token)+1)*sizeof(char)); 
         strcpy(per->firstName, token);
 
+        // last name
         token = strtok(NULL, " ");
         per->lastName = malloc((strlen(token)+1)*sizeof(char)); 
         strcpy(per->lastName, token);
 
+        // country
         token = strtok(NULL, " ");
         HTInsert(countries, token, NULL);
         per->countryCode = HTHashFunction(token, countries->curSize);
 
+        // age
         token = strtok(NULL, " ");
         per->age = atoi(token);
 
         HTInsert(citizenRecords, per->citizenID, per);
         
+        // virus
+        Virus vir = NULL;
+
         token = strtok(NULL, " ");
-        if(!HTExists(viruses, token)){
-            Virus vir = malloc(sizeof(struct virusstr));
+        if(!HTGet(viruses, token, (HTItem *)&vir)){
+            vir = malloc(sizeof(struct virusstr));
             vir->vaccinated_bloom = bloomInitialize(bloomSize);
             vir->vaccinated_persons = newSkiplist(9, 0.5);
             vir->not_vaccinated_persons = newSkiplist(9, 0.5);
+
+            HTInsert(viruses, token, vir);
         }
+
+        // yes/no
+        token = strtok(NULL, " ");
+        char vaccinated = (strcmp(token, "YES") == 0);
+
+        // date
+        Date date = NULL;
+
+        token = strtok(NULL, " ");
+
+        if(vaccinated){
+            date = malloc(sizeof(struct datestr));
+
+            date->day = atoi(strtok(token, "-")); 
+            date->month = atoi(strtok(NULL, "-")); 
+            date->year = atoi(strtok(NULL, "-")); 
+        }else{
+            if(token != NULL){
+                fprintf(stderr, "Syntax error");
+                return 1;  
+            } 
+        }
+
+        // insert new record
+        VaccRecord rec = malloc(sizeof(struct vaccrecstr));
+        rec->per = per;
+        rec->date = date;
+
+        insertCitizenRecord(rec, vir);
     }
 
     fclose(inputFile);
