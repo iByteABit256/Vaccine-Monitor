@@ -6,4 +6,3 @@
 003 Bob Marley JAMAICA 32 SARS-1 YES 03-08-1975
 004 Alexi Laiho Finland 45 COVID-19 NO
 004 Alexi Laiho Finland 45 SARS-1 YES 14-03-2002
-
