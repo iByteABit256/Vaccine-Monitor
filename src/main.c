@@ -92,11 +92,13 @@ int main(int argc, char *argv[]){
         token = strtok(NULL, " ");
         if(!HTGet(viruses, token, (HTItem *)&vir)){
             vir = malloc(sizeof(struct virusstr));
+            vir->name = malloc((strlen(token)+1)*sizeof(char)); 
+            strcpy(vir->name, token);
             vir->vaccinated_bloom = bloomInitialize(bloomSize);
             vir->vaccinated_persons = newSkiplist(9, 0.5);
             vir->not_vaccinated_persons = newSkiplist(9, 0.5);
 
-            HTInsert(viruses, token, vir);
+            HTInsert(viruses, vir->name, vir);
         }
 
         // yes/no
@@ -128,6 +130,14 @@ int main(int argc, char *argv[]){
 
         insertCitizenRecord(rec, vir);
     }
+
+    Virus sars = HTGetItem(viruses, "SARS-1");
+    vaccineStatusBloom("001", sars);
+    vaccineStatusBloom("002", sars);
+    vaccineStatus("001", sars);
+    vaccineStatus("002", sars);
+    vaccineStatusBloom("004", sars);
+    vaccineStatus("004", sars);
 
     fclose(inputFile);
 

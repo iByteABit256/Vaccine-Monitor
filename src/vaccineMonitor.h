@@ -2,6 +2,7 @@
 #include "../lib/skiplist/skiplist.h"
 
 struct virusstr{
+    char *name;
     BloomFilter vaccinated_bloom;
     Skiplist vaccinated_persons;
     Skiplist not_vaccinated_persons;
@@ -35,4 +36,6 @@ struct vaccrecstr{
 typedef struct vaccrecstr *VaccRecord;
 
 void insertCitizenRecord(VaccRecord, Virus);
+void vaccineStatusBloom(char *, Virus);
+void vaccineStatus(char *, Virus);
 

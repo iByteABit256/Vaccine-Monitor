@@ -5,11 +5,14 @@
 
 
 // Constructs new skip node
-skipNode newSkipNode(char *key, int lvl){
+skipNode newSkipNode(char *key, void *item, int lvl){
     skipNode node = malloc(sizeof(struct node_struct)); 
 
     // Pass by reference to save memory
     node->key = key;
+
+    // Pass by reference
+    node->item = item;
 
     // Allocate forward array and initialize to zero 
     node->forward = malloc(sizeof(skipNode *)*(lvl+1));
@@ -31,7 +34,7 @@ Skiplist newSkiplist(int maxlvl, float p){
     sl->maxlvl = maxlvl;
     sl->p = p;
     sl->lvl = 0;
-    sl->dummy = newSkipNode(NULL, maxlvl);
+    sl->dummy = newSkipNode(NULL, NULL, maxlvl);
 
     return sl;
 }
@@ -53,7 +56,7 @@ int coinToss(Skiplist sl){
 }
 
 // Insert new node to skiplist
-void skipInsert(Skiplist sl, char *key){
+void skipInsert(Skiplist sl, char *key, void *item){
 
     // Current node
     skipNode curr = sl->dummy; 
@@ -87,7 +90,7 @@ void skipInsert(Skiplist sl, char *key){
         }
 
         // New node
-        skipNode node = newSkipNode(key, rand_level);
+        skipNode node = newSkipNode(key, item, rand_level);
 
         // Update directory and forward nodes
         for(int i = 0; i <= rand_level; i++){
@@ -122,6 +125,35 @@ int skipExists(Skiplist sl, char *key){
 
     // If end of level, or before a different node then it doesn't exist
     return !(curr == NULL || strcmp(curr->key, key));
+}
+
+// Get item in skiplist
+void *skipGet(Skiplist sl, char *key){
+
+    // Current node
+    skipNode curr = sl->dummy; 
+
+    // Directory that keeps track of each level
+    skipNode dir[sl->maxlvl+1];
+    memset(dir, 0, sizeof(skipNode)*(sl->maxlvl+1));
+
+    // Set every new level to dummy and update level variable
+    for(int i = sl->lvl; i >= 0; i--){
+        while(curr->forward[i] != NULL && strcmp(curr->forward[i]->key, key) < 0){
+            curr = curr->forward[i]; 
+        }
+        dir[i] = curr;
+    }
+
+    // Check next node of level 0
+    curr = curr->forward[0];
+
+    // If end of level, or before a different node then it doesn't exist
+    if(!(curr == NULL || strcmp(curr->key, key))){
+        return curr->item;
+    }else{
+        return NULL;
+    }
 }
 
 // Deletes node from skiplist
