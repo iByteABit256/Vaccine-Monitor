@@ -8,13 +8,13 @@
 #define MAX_LINE 100
 #define MAX_VIRUSES 512
 
-// TODO: error checking 
-int main(int argc, char *argv[]){
+// Parses parameters of executable
+void parseExecutableParameters(int argc, char *argv[], char **fP, int *bS){
 
     // Path of input file
     char *filePath;
 
-    // Parameter parsing
+    // Parameter indices
     int inputFileParameter = -1;
     int bloomSize = -1;
 
@@ -30,26 +30,28 @@ int main(int argc, char *argv[]){
 
     if(inputFileParameter == -1 || bloomSize == -1){
         fprintf(stderr, "Syntax error\n");
-        return 1;
+        exit(1);
     }
 
     if(inputFileParameter+1 < argc){
         filePath = argv[inputFileParameter+1];
     }else{
         fprintf(stderr, "Syntax error\n");
-        return 1;
+        exit(1);
     } 
 
     if(bloomSize+1 < argc){
         bloomSize = atoi(argv[bloomSize+1]);
     }else{
         fprintf(stderr, "Syntax error\n");
-        return 1;
+        exit(1);
     }
 
-    HTHash citizenRecords = HTCreate();
-    HTHash countries = HTCreate();
-    HTHash viruses = HTCreate();
+    *fP = filePath;
+    *bS = bloomSize;
+}
+
+void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash countries, HTHash viruses){
 
     FILE *inputFile = fopen(filePath, "r");
 
@@ -119,7 +121,7 @@ int main(int argc, char *argv[]){
         }else{
             if(token != NULL){
                 fprintf(stderr, "Syntax error");
-                return 1;  
+                exit(1);  
             } 
         }
 
@@ -131,6 +133,22 @@ int main(int argc, char *argv[]){
         insertCitizenRecord(rec, vir);
     }
 
+    fclose(inputFile);
+}
+
+// TODO: error checking 
+int main(int argc, char *argv[]){
+
+    char *filePath;
+    int bloomSize;
+
+    parseExecutableParameters(argc, argv, &filePath, &bloomSize);
+
+    HTHash citizenRecords = HTCreate();
+    HTHash countries = HTCreate();
+    HTHash viruses = HTCreate();
+
+    parseInputFile(filePath, bloomSize, citizenRecords, countries, viruses);
     Virus sars = HTGetItem(viruses, "SARS-1");
     vaccineStatusBloom("001", sars);
     vaccineStatusBloom("002", sars);
@@ -139,7 +157,6 @@ int main(int argc, char *argv[]){
     vaccineStatusBloom("004", sars);
     vaccineStatus("004", sars);
 
-    fclose(inputFile);
 
     return 0;
 }
