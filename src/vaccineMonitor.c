@@ -16,11 +16,20 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
 }
 
 void vaccineStatusBloom(char *citizenID, Virus vir){
+    if(vir == NULL){
+        printf("NO\n");
+        return;
+    }
     int vaccinated = bloomExists(vir->vaccinated_bloom, citizenID);
     printf("%s\n", vaccinated? "MAYBE" : "NO");
 }
 
 void vaccineStatus(char *citizenID, Virus vir){
+    if(vir == NULL){
+        printf("NO\n");
+        return;
+    }
+
     VaccRecord rec = skipGet(vir->vaccinated_persons, citizenID);
 
     if(rec){
