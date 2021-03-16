@@ -1,5 +1,7 @@
 #include "../lib/bloomfilter/bloomfilter.h" 
 #include "../lib/skiplist/skiplist.h"
+#include "../lib/hashtable/htInterface.h"
+#include "../lib/date/date.h"
 
 struct virusstr{
     char *name;
@@ -14,19 +16,11 @@ struct personstr{
     char *citizenID;
     char *firstName;
     char *lastName;
-    int countryCode; // Hashed country name
+    char *country;
     int age;
 };
 
 typedef struct personstr *Person;
-
-struct datestr{
-    unsigned int day;
-    unsigned int month;
-    unsigned int year;
-};
-
-typedef struct datestr *Date;
 
 struct vaccrecstr{
     Person per;
@@ -37,5 +31,7 @@ typedef struct vaccrecstr *VaccRecord;
 
 void insertCitizenRecord(VaccRecord, Virus);
 void vaccineStatusBloom(char *, Virus);
-void vaccineStatus(char *, Virus);
+void vaccineStatus(char *, Virus, HTHash);
+void list_nonVaccinated_Persons(Virus, HTHash);
+void populationStatus(Virus, Date, Date, char *);
 

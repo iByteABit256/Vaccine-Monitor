@@ -91,6 +91,10 @@ int HTSize(HTHash hash){
 }
 
 int HTGet(HTHash hash, char *key, HTItem *itemptr){
+    if(key == NULL){
+        return 0;
+    }
+
 	int index = HTHashFunction(key, hash->curSize);
 	Listptr list = ListSearchKey(hash->ht[index], key);
 	if(list){
@@ -145,6 +149,10 @@ void HTDestroy(HTHash hash){
 }
 
 HTItem HTGetItem(HTHash hash, char *key){
+    if(key == NULL){
+        return NULL;
+    }
+
 	int index = HTHashFunction(key, hash->curSize);
 	Listptr list = ListSearchKey(hash->ht[index], key);
 	if(list){
