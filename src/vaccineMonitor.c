@@ -102,18 +102,6 @@ void list_nonVaccinated_Persons(Virus v, HTHash countries){
     }
 }
 
-// Print function for populationStatus
-void printCountryStats(HTHash countries, char *key, HTItem item){
-    Country country = item;
-    char *name = country->name;
-    int vaccPopulation = country->popCounter;
-    int population = country->population;
-    printf("%s %d %0.2f%%\n", name, vaccPopulation, (float)vaccPopulation/(float)population);
-
-    // set counter back to zero
-    country->popCounter = 0;
-}
-
 void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *countryName){
     // error if only one date was given
     if((d1 == NULL)^(d2 == NULL)){
@@ -149,5 +137,22 @@ void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *count
         }
     }
 
-    // visit hashtable
+    for(int i = 0; i < countries->curSize; i++){
+		for(Listptr l = countries->ht[i]->next; l != l->tail; l = l->next){
+            Country country = ((HTEntry)(l->value))->item;
+
+            if(countryName != NULL && strcmp(country->name, countryName)){
+                continue;
+            }
+
+            char *name = country->name;
+            int vaccPopulation = country->popCounter;
+            int population = country->population;
+            printf("%s %d %0.2f%%\n", name, vaccPopulation, (float)vaccPopulation/(float)population);
+
+            // set counter back to zero
+            country->popCounter = 0;
+
+		}
+	}
 }
