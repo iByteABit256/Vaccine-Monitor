@@ -92,7 +92,7 @@ int main(int argc, char *argv[]){
                     d2->month = atoi(strtok(NULL, "-\n")); 
                     d2->year = atoi(strtok(NULL, "-\n")); 
 
-                    populationStatus(vir, d1, d2, NULL);
+                    populationStatus(vir, d1, d2, countries, NULL);
 
                 }else{
                     // Country given
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]){
                     d2->month = atoi(strtok(NULL, "-\n")); 
                     d2->year = atoi(strtok(NULL, "-\n")); 
 
-                    populationStatus(vir, d1, d2, par1);
+                    populationStatus(vir, d1, d2, countries, par1);
 
                 }
 

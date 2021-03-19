@@ -17,7 +17,9 @@ typedef struct virusstr *Virus;
 // Country
 struct countrystr{
     char *name;
+    int popCounter; // counter for national population
     int population;
+    int ageCounter[4]; // counters for age-based population
     int agePopulation[4];
 };
 
@@ -50,4 +52,4 @@ void insertCitizenRecord(VaccRecord, Virus);
 void vaccineStatusBloom(char *, Virus);
 void vaccineStatus(char *, Virus, HTHash);
 void list_nonVaccinated_Persons(Virus, HTHash);
-void populationStatus(Virus, Date, Date, char *);
+void populationStatus(Virus, Date, Date, HTHash, char *);

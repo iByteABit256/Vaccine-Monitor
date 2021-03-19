@@ -102,28 +102,52 @@ void list_nonVaccinated_Persons(Virus v, HTHash countries){
     }
 }
 
-void populationStatus(Virus vir, Date d1, Date d2, char *country){
-    if(country == NULL){
-        // No country given
+// Print function for populationStatus
+void printCountryStats(HTHash countries, char *key, HTItem item){
+    Country country = item;
+    char *name = country->name;
+    int vaccPopulation = country->popCounter;
+    int population = country->population;
+    printf("%s %d %0.2f%%\n", name, vaccPopulation, (float)vaccPopulation/(float)population);
+
+    // set counter back to zero
+    country->popCounter = 0;
+}
+
+void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *countryName){
+    // error if only one date was given
+    if((d1 == NULL)^(d2 == NULL)){
+        fprintf(stderr, "Invalid input\n");
+        return;
+    }
+
+    int dates_given = 1;
+
+    if(d1 == NULL){
+        dates_given = 0;
+    }
+
+    if(countryName == NULL){
         Skiplist vacc = vir->vaccinated_persons;
-        HTHash countryStats = HTCreate();
         
-        // for(skipNode snode = vacc->dummy->forward[0]; 
-        //     snode != NULL; snode = snode->forward[0]){
+        for(skipNode snode = vacc->dummy->forward[0];
+            snode != NULL; snode = snode->forward[0]){
 
-        //     Person per = ((VaccRecord)(snode->item))->per;
-        //     if(!HTExists(countryStats, per->country)){
-        //         CountryStatistics cstat = malloc(sizeof(struct countrystr));
+            Date date = ((VaccRecord)(snode->item))->date;
+            Person per = ((VaccRecord)(snode->item))->per;
+            Country country = per->country;
 
-        //         cstat->population = 1;
-        //         cstat->vaccinated_population = 1;
+            if(countryName != NULL && strcmp(country->name, countryName)){
+                continue;
+            }
 
-        //         HTInsert(countryStats, per->country, )
-        //     }
-        // }
-
-    }else{
-        // Country given
-
+            if(dates_given){
+                if(compareDates(date, d1) >= 0 && compareDates(date, d2) <= 0){
+                    country->popCounter += 1;
+                }
+            }else{
+                country->popCounter += 1;
+            }
+        }
     }
 }
