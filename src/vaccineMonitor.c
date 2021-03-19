@@ -87,7 +87,9 @@ void list_nonVaccinated_Persons(Virus v, HTHash countries){
 void populationStatus(Virus vir, Date d1, Date d2, char *country){
     if(country == NULL){
         // No country given
+        Skiplist vacc = vir->vaccinated_persons;
         
+
     }else{
         // Country given
 

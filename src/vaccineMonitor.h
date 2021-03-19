@@ -3,6 +3,7 @@
 #include "../lib/hashtable/htInterface.h"
 #include "../lib/date/date.h"
 
+
 struct virusstr{
     char *name;
     BloomFilter vaccinated_bloom;
