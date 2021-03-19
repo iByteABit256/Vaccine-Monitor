@@ -127,27 +127,27 @@ void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *count
         dates_given = 0;
     }
 
-    if(countryName == NULL){
-        Skiplist vacc = vir->vaccinated_persons;
-        
-        for(skipNode snode = vacc->dummy->forward[0];
-            snode != NULL; snode = snode->forward[0]){
+    Skiplist vacc = vir->vaccinated_persons;
+    
+    for(skipNode snode = vacc->dummy->forward[0];
+        snode != NULL; snode = snode->forward[0]){
 
-            Date date = ((VaccRecord)(snode->item))->date;
-            Person per = ((VaccRecord)(snode->item))->per;
-            Country country = per->country;
+        Date date = ((VaccRecord)(snode->item))->date;
+        Person per = ((VaccRecord)(snode->item))->per;
+        Country country = per->country;
 
-            if(countryName != NULL && strcmp(country->name, countryName)){
-                continue;
-            }
+        if(countryName != NULL && strcmp(country->name, countryName)){
+            continue;
+        }
 
-            if(dates_given){
-                if(compareDates(date, d1) >= 0 && compareDates(date, d2) <= 0){
-                    country->popCounter += 1;
-                }
-            }else{
+        if(dates_given){
+            if(compareDates(date, d1) >= 0 && compareDates(date, d2) <= 0){
                 country->popCounter += 1;
             }
+        }else{
+            country->popCounter += 1;
         }
     }
+
+    // visit hashtable
 }
