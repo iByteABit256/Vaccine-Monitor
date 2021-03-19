@@ -17,10 +17,10 @@ TARGET = vaccineMonitor
 
 # source files
 SRC = src/vaccineMonitor.c src/main.c lib/hash/hash.c lib/bloomfilter/bloomfilter.c\
-	  lib/lists/lists.c lib/skiplist/skiplist.c lib/hashtable/hashtable.c
+	  lib/lists/lists.c lib/skiplist/skiplist.c lib/hashtable/hashtable.c src/parser.c
 
 # object files
-OBJ = vaccineMonitor.o main.o hash.o bloomfilter.o lists.o skiplist.o hashtable.o
+OBJ = vaccineMonitor.o main.o hash.o bloomfilter.o lists.o skiplist.o hashtable.o parser.o
 
 # make all by default
 default: all
@@ -47,9 +47,10 @@ skiplist.o: lib/skiplist/skiplist.c
 	$(CC) $(CFLAGS) -c lib/skiplist/skiplist.c
 hashtable.o: lib/hashtable/hashtable.c lib/lists/lists.h
 	$(CC) $(CFLAGS) -c lib/hashtable/hashtable.c
+parser.o: src/parser.c lib/hashtable/hashtable.c
+	$(CC) $(CFLAGS) -c src/parser.c
 
 # clean up
 clean:
 	-rm -f $(TARGET)
 	-rm -f $(OBJ)
-

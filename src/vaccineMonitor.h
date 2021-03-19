@@ -14,12 +14,24 @@ struct virusstr{
 
 typedef struct virusstr *Virus;
 
+// Country
+struct countrystr{
+    char *name;
+    int population;
+    int agePopulation[4];
+};
+
+typedef struct countrystr *Country;
+
+Country newCountry(char *);
+void incrementAgePopulation(Country, int);
+
 // Person
 struct personstr{
     char *citizenID;
     char *firstName;
     char *lastName;
-    char *country;
+    Country country;
     int age;
 };
 
@@ -32,14 +44,6 @@ struct vaccrecstr{
 };
 
 typedef struct vaccrecstr *VaccRecord;
-
-// Country Statistics
-struct countrystr{
-    int population;
-    int vaccinated_population;
-};
-
-typedef struct countrystr *CountryStatistics;
 
 // Interface
 void insertCitizenRecord(VaccRecord, Virus);

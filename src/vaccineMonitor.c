@@ -1,6 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "vaccineMonitor.h"
+#define MIN(a,b) a < b? a : b
+
+
+// Initialize new country
+Country newCountry(char *name){
+    Country country = malloc(sizeof(struct countrystr));
+    memset(country, 0, sizeof(struct countrystr));
+    country->name = name;
+
+    return country;
+}
+
+// Increments correct age group population
+void incrementAgePopulation(Country country, int age){
+    country->agePopulation[MIN(age/20, 3)] += 1;
+}
 
 // insert new citizen record related to virus
 void insertCitizenRecord(VaccRecord rec, Virus vir){
@@ -77,9 +94,10 @@ void list_nonVaccinated_Persons(Virus v, HTHash countries){
         
         for(skipNode snode = skip->dummy->forward[0]; 
             snode != NULL; snode = snode->forward[0]){
+
             Person per = ((VaccRecord)(snode->item))->per;
             printf("%s %s %s %s %d\n", per->citizenID, per->firstName,
-                    per->lastName, per->country, per->age);
+                    per->lastName, per->country->name, per->age);
         }
     }
 }
@@ -88,7 +106,21 @@ void populationStatus(Virus vir, Date d1, Date d2, char *country){
     if(country == NULL){
         // No country given
         Skiplist vacc = vir->vaccinated_persons;
+        HTHash countryStats = HTCreate();
         
+        // for(skipNode snode = vacc->dummy->forward[0]; 
+        //     snode != NULL; snode = snode->forward[0]){
+
+        //     Person per = ((VaccRecord)(snode->item))->per;
+        //     if(!HTExists(countryStats, per->country)){
+        //         CountryStatistics cstat = malloc(sizeof(struct countrystr));
+
+        //         cstat->population = 1;
+        //         cstat->vaccinated_population = 1;
+
+        //         HTInsert(countryStats, per->country, )
+        //     }
+        // }
 
     }else{
         // Country given
