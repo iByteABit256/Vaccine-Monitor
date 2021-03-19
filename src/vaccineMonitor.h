@@ -4,6 +4,7 @@
 #include "../lib/date/date.h"
 
 
+// Virus
 struct virusstr{
     char *name;
     BloomFilter vaccinated_bloom;
@@ -13,6 +14,7 @@ struct virusstr{
 
 typedef struct virusstr *Virus;
 
+// Person
 struct personstr{
     char *citizenID;
     char *firstName;
@@ -23,6 +25,7 @@ struct personstr{
 
 typedef struct personstr *Person;
 
+// Vaccine Record
 struct vaccrecstr{
     Person per;
     Date date;
@@ -30,9 +33,17 @@ struct vaccrecstr{
 
 typedef struct vaccrecstr *VaccRecord;
 
+// Country Statistics
+struct countrystr{
+    int population;
+    int vaccinated_population;
+};
+
+typedef struct countrystr *CountryStatistics;
+
+// Interface
 void insertCitizenRecord(VaccRecord, Virus);
 void vaccineStatusBloom(char *, Virus);
 void vaccineStatus(char *, Virus, HTHash);
 void list_nonVaccinated_Persons(Virus, HTHash);
 void populationStatus(Virus, Date, Date, char *);
-
