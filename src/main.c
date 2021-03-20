@@ -74,23 +74,31 @@ int main(int argc, char *argv[]){
                 char *par3 = strtok(NULL, " \n");
                 char *par4 = strtok(NULL, " \n");
 
-                if(par4 == NULL){
+                if(!HTExists(countries, par1)){
                     // No country given
                     Virus vir = HTGetItem(viruses, par1);
 
                     Date d1, d2; 
 
-                    d1 = malloc(sizeof(struct datestr));
+                    if(par2 == NULL){
+                        d1 = NULL;
+                    }else{
+                        d1 = malloc(sizeof(struct datestr));
 
-                    d1->day = atoi(strtok(par2, "-\n")); 
-                    d1->month = atoi(strtok(NULL, "-\n")); 
-                    d1->year = atoi(strtok(NULL, "-\n")); 
+                        d1->day = atoi(strtok(par2, "-\n")); 
+                        d1->month = atoi(strtok(NULL, "-\n")); 
+                        d1->year = atoi(strtok(NULL, "-\n"));
+                    }
 
-                    d2 = malloc(sizeof(struct datestr));
+                    if(par3 == NULL){
+                        d2 = NULL;
+                    }else{
+                        d2 = malloc(sizeof(struct datestr));
 
-                    d2->day = atoi(strtok(par3, "-\n")); 
-                    d2->month = atoi(strtok(NULL, "-\n")); 
-                    d2->year = atoi(strtok(NULL, "-\n")); 
+                        d2->day = atoi(strtok(par3, "-\n")); 
+                        d2->month = atoi(strtok(NULL, "-\n")); 
+                        d2->year = atoi(strtok(NULL, "-\n"));
+                    }
 
                     populationStatus(vir, d1, d2, countries, NULL);
 
@@ -100,20 +108,27 @@ int main(int argc, char *argv[]){
 
                     Date d1, d2; 
 
-                    d1 = malloc(sizeof(struct datestr));
+                    if(par3 == NULL){
+                        d1 = NULL;
+                    }else{
+                        d1 = malloc(sizeof(struct datestr));
 
-                    d1->day = atoi(strtok(par3, "-\n")); 
-                    d1->month = atoi(strtok(NULL, "-\n")); 
-                    d1->year = atoi(strtok(NULL, "-\n")); 
+                        d1->day = atoi(strtok(par3, "-\n")); 
+                        d1->month = atoi(strtok(NULL, "-\n")); 
+                        d1->year = atoi(strtok(NULL, "-\n"));
+                    }
 
-                    d2 = malloc(sizeof(struct datestr));
+                    if(par4 == NULL){
+                        d2 = NULL;
+                    }else{
+                        d2 = malloc(sizeof(struct datestr));
 
-                    d2->day = atoi(strtok(par4, "-\n")); 
-                    d2->month = atoi(strtok(NULL, "-\n")); 
-                    d2->year = atoi(strtok(NULL, "-\n")); 
+                        d2->day = atoi(strtok(par4, "-\n")); 
+                        d2->month = atoi(strtok(NULL, "-\n")); 
+                        d2->year = atoi(strtok(NULL, "-\n"));
 
+                    }
                     populationStatus(vir, d1, d2, countries, par1);
-
                 }
 
             }else if(strcmp(token, "/popStatusByAge") == 0){
