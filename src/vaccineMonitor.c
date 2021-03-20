@@ -19,6 +19,11 @@ void incrementAgePopulation(Country country, int age){
     country->agePopulation[MIN(age/20, 3)] += 1;
 }
 
+// Increments correct age group counter
+void incrementAgeCounter(Country country, int age){
+    country->ageCounter[MIN(age/20, 3)] += 1;
+}
+
 // insert new citizen record related to virus
 void insertCitizenRecord(VaccRecord rec, Virus vir){
     if(rec->date == NULL){
@@ -153,6 +158,77 @@ void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *count
 
             // set counter back to zero
             country->popCounter = 0;
+
+		}
+	}
+}
+
+void popStatusByAge(Virus vir, Date d1, Date d2, HTHash countries, char *countryName){
+    // error if only one date was given
+    if((d1 == NULL)^(d2 == NULL)){
+        fprintf(stderr, "Invalid input\n");
+        return;
+    }
+
+    int dates_given = 1;
+
+    if(d1 == NULL){
+        dates_given = 0;
+    }
+
+    Skiplist vacc = vir->vaccinated_persons;
+    
+    for(skipNode snode = vacc->dummy->forward[0];
+        snode != NULL; snode = snode->forward[0]){
+
+        Date date = ((VaccRecord)(snode->item))->date;
+        Person per = ((VaccRecord)(snode->item))->per;
+        Country country = per->country;
+
+        if(countryName != NULL && strcmp(country->name, countryName)){
+            continue;
+        }
+
+        if(dates_given){
+            if(compareDates(date, d1) >= 0 && compareDates(date, d2) <= 0){
+                incrementAgeCounter(country, per->age);
+            }
+        }else{
+            incrementAgeCounter(country, per->age);
+        }
+    }
+
+    for(int i = 0; i < countries->curSize; i++){
+		for(Listptr l = countries->ht[i]->next; l != l->tail; l = l->next){
+            Country country = ((HTEntry)(l->value))->item;
+
+            if(countryName != NULL && strcmp(country->name, countryName)){
+                continue;
+            }
+
+            char *name = country->name;
+            int *agePopulation = country->agePopulation;
+            int *ageCounter = country->ageCounter;
+            float percentages[4];
+            for(int i = 0; i < 4; i++){
+                if(agePopulation[i] == 0){
+                    percentages[i] = 0;
+                    continue;
+                }
+
+                percentages[i] = (float)ageCounter[i]*100/(float)agePopulation[i];
+            }
+
+            printf("%s\n", name);
+            printf("0-19 %d %0.2f%%\n", agePopulation[0], percentages[0]);
+            printf("20-39 %d %0.2f%%\n", agePopulation[1], percentages[1]);
+            printf("40-59 %d %0.2f%%\n", agePopulation[2], percentages[2]);
+            printf("60+ %d %0.2f%%\n\n", agePopulation[3], percentages[3]);
+
+            // set counter back to zero
+            for(int i = 0; i < 4; i++){
+                ageCounter[i] = 0;
+            }
 
 		}
 	}

@@ -53,3 +53,4 @@ void vaccineStatusBloom(char *, Virus);
 void vaccineStatus(char *, Virus, HTHash);
 void list_nonVaccinated_Persons(Virus, HTHash);
 void populationStatus(Virus, Date, Date, HTHash, char *);
+void popStatusByAge(Virus, Date, Date, HTHash, char *);

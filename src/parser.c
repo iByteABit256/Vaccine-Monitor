@@ -152,4 +152,5 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
     }
 
     fclose(inputFile);
+    free(buf);
 }

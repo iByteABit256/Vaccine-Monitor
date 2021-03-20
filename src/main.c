@@ -133,6 +133,68 @@ int main(int argc, char *argv[]){
 
             }else if(strcmp(token, "/popStatusByAge") == 0){
 
+                char *par1 = strtok(NULL, " \n");
+                char *par2 = strtok(NULL, " \n");
+                char *par3 = strtok(NULL, " \n");
+                char *par4 = strtok(NULL, " \n");
+
+                if(!HTExists(countries, par1)){
+                    // No country given
+                    Virus vir = HTGetItem(viruses, par1);
+
+                    Date d1, d2; 
+
+                    if(par2 == NULL){
+                        d1 = NULL;
+                    }else{
+                        d1 = malloc(sizeof(struct datestr));
+
+                        d1->day = atoi(strtok(par2, "-\n")); 
+                        d1->month = atoi(strtok(NULL, "-\n")); 
+                        d1->year = atoi(strtok(NULL, "-\n"));
+                    }
+
+                    if(par3 == NULL){
+                        d2 = NULL;
+                    }else{
+                        d2 = malloc(sizeof(struct datestr));
+
+                        d2->day = atoi(strtok(par3, "-\n")); 
+                        d2->month = atoi(strtok(NULL, "-\n")); 
+                        d2->year = atoi(strtok(NULL, "-\n"));
+                    }
+
+                    popStatusByAge(vir, d1, d2, countries, NULL);
+
+                }else{
+                    // Country given
+                    Virus vir = HTGetItem(viruses, par2);
+
+                    Date d1, d2; 
+
+                    if(par3 == NULL){
+                        d1 = NULL;
+                    }else{
+                        d1 = malloc(sizeof(struct datestr));
+
+                        d1->day = atoi(strtok(par3, "-\n")); 
+                        d1->month = atoi(strtok(NULL, "-\n")); 
+                        d1->year = atoi(strtok(NULL, "-\n"));
+                    }
+
+                    if(par4 == NULL){
+                        d2 = NULL;
+                    }else{
+                        d2 = malloc(sizeof(struct datestr));
+
+                        d2->day = atoi(strtok(par4, "-\n")); 
+                        d2->month = atoi(strtok(NULL, "-\n")); 
+                        d2->year = atoi(strtok(NULL, "-\n"));
+
+                    }
+                    popStatusByAge(vir, d1, d2, countries, par1);
+                }
+
             }else if(strcmp(token, "/insertCitizenRecord") == 0){
 
                 // citizen ID
@@ -306,7 +368,11 @@ int main(int argc, char *argv[]){
                 rec->per = per;
                 rec->date = date;
 
+                VaccRecord old_rec = skipGet(vir->not_vaccinated_persons, per->citizenID);
+                free(old_rec->date);
+                free(old_rec);
                 skipDelete(vir->not_vaccinated_persons, per->citizenID);
+                
                 insertCitizenRecord(rec, vir);
 
             }else if(strcmp(token, "/list-nonVaccinated-Persons") == 0){
@@ -326,6 +392,67 @@ int main(int argc, char *argv[]){
             }
         }
     }
+
+    for(int i = 0; i < countries->curSize; i++){
+		for(Listptr l = countries->ht[i]->next; l != l->tail; l = l->next){
+            Country country = ((HTEntry)(l->value))->item;
+            free(country->name);
+            free(country);
+        }
+    }
+
+    for(int i = 0; i < citizenRecords->curSize; i++){
+		for(Listptr l = citizenRecords->ht[i]->next; l != l->tail; l = l->next){
+            Person per = ((HTEntry)(l->value))->item;
+            free(per->citizenID);
+            free(per->firstName);
+            free(per->lastName);
+            free(per);
+        }
+    }
+
+    for(int i = 0; i < viruses->curSize; i++){
+		for(Listptr l = viruses->ht[i]->next; l != l->tail; l = l->next){
+            Virus vir = ((HTEntry)(l->value))->item;
+            free(vir->name);
+            bloomDestroy(vir->vaccinated_bloom);
+            
+            Skiplist skip = vir->vaccinated_persons;
+
+            for(skipNode snode = skip->dummy->forward[0];
+                snode != NULL; snode = snode->forward[0]){
+
+                VaccRecord rec = snode->item;
+                free(rec->date);
+                free(rec);
+            }
+
+            skip = vir->not_vaccinated_persons;
+
+            for(skipNode snode = skip->dummy->forward[0];
+                snode != NULL; snode = snode->forward[0]){
+
+                VaccRecord rec = snode->item;
+                free(rec->date);
+                free(rec);
+            }
+
+            skipDestroy(vir->vaccinated_persons);
+            skipDestroy(vir->not_vaccinated_persons);
+
+            free(vir->vaccinated_bloom);
+            free(vir->vaccinated_persons);
+            free(vir->not_vaccinated_persons);
+
+            free(vir);
+        }
+    }
+
+    HTDestroy(countries);
+    HTDestroy(citizenRecords);
+    HTDestroy(viruses);
+
+    free(buf);
 
     return 0;
 }
