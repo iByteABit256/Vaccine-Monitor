@@ -148,7 +148,8 @@ void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *count
             char *name = country->name;
             int vaccPopulation = country->popCounter;
             int population = country->population;
-            printf("%s %d %0.2f%%\n", name, vaccPopulation, (float)vaccPopulation/(float)population);
+            printf("%s %d %0.2f%%\n", name, vaccPopulation,\
+                   (float)vaccPopulation*100/(float)population);
 
             // set counter back to zero
             country->popCounter = 0;

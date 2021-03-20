@@ -58,50 +58,58 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
 
     // Read input file
     while(fgets(buf, MAX_LINE, inputFile) != NULL){
-        Person per = malloc(sizeof(struct personstr));  
-        char *token = strtok(buf, " ");
-        
-        // citizen ID
-        per->citizenID = malloc((strlen(token)+1)*sizeof(char));
-        strcpy(per->citizenID, token);
 
-        // first name
-        token = strtok(NULL, " ");
-        per->firstName = malloc((strlen(token)+1)*sizeof(char)); 
-        strcpy(per->firstName, token);
+        char *token = strtok(buf, " \n");
+                
+        Person per = HTGetItem(citizenRecords, token);
 
-        // last name
-        token = strtok(NULL, " ");
-        per->lastName = malloc((strlen(token)+1)*sizeof(char)); 
-        strcpy(per->lastName, token);
+        if(per == NULL){
+            //  Create new person and insert
+            per = malloc(sizeof(struct personstr));
+            per->citizenID = malloc((strlen(token)+1)*sizeof(char));
+            strcpy(per->citizenID, token);
 
-        // country
-        token = strtok(NULL, " ");
-        Country country = HTGetItem(countries, token);
-        if(country == NULL){
-            char *name = malloc((strlen(token)+1)*sizeof(char)); 
-            strcpy(name, token);
+            // first name
+            token = strtok(NULL, " \n");
+            per->firstName = malloc((strlen(token)+1)*sizeof(char)); 
+            strcpy(per->firstName, token);
 
-            country = newCountry(name);
-            
-            HTInsert(countries, name, country);
+            // last name
+            token = strtok(NULL, " \n");
+            per->lastName = malloc((strlen(token)+1)*sizeof(char)); 
+            strcpy(per->lastName, token);
+                            
+            // country
+            token = strtok(NULL, " \n");
+            Country country = HTGetItem(countries, token);
+            if(country == NULL){
+                char *name = malloc((strlen(token)+1)*sizeof(char)); 
+                strcpy(name, token);
+
+                country = newCountry(name);
+                
+                HTInsert(countries, name, country);
+            }
+
+            country->population += 1;
+            per->country = country;
+
+            // age
+            token = strtok(NULL, " \n");
+            per->age = atoi(token);
+
+            incrementAgePopulation(country, per->age);
+
+            HTInsert(citizenRecords, per->citizenID, per);
+        }else{
+            // ignore person's information
+            for(int i = 0; i < 4; i++) strtok(NULL, " \n");
         }
-
-        country->population += 1;
-        per->country = country;
-
-        // age
-        token = strtok(NULL, " ");
-        per->age = atoi(token);
-
-        incrementAgePopulation(country, per->age);
-
-        HTInsert(citizenRecords, per->citizenID, per);
         
         // virus
         Virus vir = NULL;
 
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " \n");
         if(!HTGet(viruses, token, (HTItem *)&vir)){
             vir = malloc(sizeof(struct virusstr));
             vir->name = malloc((strlen(token)+1)*sizeof(char)); 
@@ -114,20 +122,20 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
         }
 
         // yes/no
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " \n");
         char vaccinated = (strcmp(token, "YES") == 0);
 
         // date
         Date date = NULL;
 
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " \n");
 
         if(vaccinated){
             date = malloc(sizeof(struct datestr));
 
-            date->day = atoi(strtok(token, "-")); 
-            date->month = atoi(strtok(NULL, "-")); 
-            date->year = atoi(strtok(NULL, "-")); 
+            date->day = atoi(strtok(token, "-\n")); 
+            date->month = atoi(strtok(NULL, "-\n")); 
+            date->year = atoi(strtok(NULL, "-\n")); 
         }else{
             if(token != NULL){
                 fprintf(stderr, "Syntax error\n");

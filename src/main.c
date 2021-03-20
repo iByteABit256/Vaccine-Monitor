@@ -120,45 +120,53 @@ int main(int argc, char *argv[]){
 
             }else if(strcmp(token, "/insertCitizenRecord") == 0){
 
-                Person per = malloc(sizeof(struct personstr));  
+                // citizen ID
                 token = strtok(NULL, " \n");
                 
-                // citizen ID
-                per->citizenID = malloc((strlen(token)+1)*sizeof(char));
-                strcpy(per->citizenID, token);
+                Person per = HTGetItem(citizenRecords, token);
 
-                // first name
-                token = strtok(NULL, " \n");
-                per->firstName = malloc((strlen(token)+1)*sizeof(char)); 
-                strcpy(per->firstName, token);
+                if(per == NULL){
+                    //  Create new person and insert
+                    per = malloc(sizeof(struct personstr));
+                    per->citizenID = malloc((strlen(token)+1)*sizeof(char));
+                    strcpy(per->citizenID, token);
 
-                // last name
-                token = strtok(NULL, " \n");
-                per->lastName = malloc((strlen(token)+1)*sizeof(char)); 
-                strcpy(per->lastName, token);
-                                
-                // country
-                token = strtok(NULL, " \n");
-                Country country = HTGetItem(countries, token);
-                if(country == NULL){
-                    char *name = malloc((strlen(token)+1)*sizeof(char)); 
-                    strcpy(name, token);
+                    // first name
+                    token = strtok(NULL, " \n");
+                    per->firstName = malloc((strlen(token)+1)*sizeof(char)); 
+                    strcpy(per->firstName, token);
 
-                    country = newCountry(name);
-                    
-                    HTInsert(countries, name, country);
+                    // last name
+                    token = strtok(NULL, " \n");
+                    per->lastName = malloc((strlen(token)+1)*sizeof(char)); 
+                    strcpy(per->lastName, token);
+                                    
+                    // country
+                    token = strtok(NULL, " \n");
+                    Country country = HTGetItem(countries, token);
+                    if(country == NULL){
+                        char *name = malloc((strlen(token)+1)*sizeof(char)); 
+                        strcpy(name, token);
+
+                        country = newCountry(name);
+                        
+                        HTInsert(countries, name, country);
+                    }
+
+                    country->population += 1;
+                    per->country = country;
+
+                    // age
+                    token = strtok(NULL, " \n");
+                    per->age = atoi(token);
+
+                    incrementAgePopulation(country, per->age);
+
+                    HTInsert(citizenRecords, per->citizenID, per);
+                }else{
+                    // ignore person's information
+                    for(int i = 0; i < 4; i++) strtok(NULL, " \n");
                 }
-
-                country->population += 1;
-                per->country = country;
-
-                // age
-                token = strtok(NULL, " \n");
-                per->age = atoi(token);
-
-                incrementAgePopulation(country, per->age);
-
-                HTInsert(citizenRecords, per->citizenID, per);
                 
                 // virus
                 Virus vir = NULL;
@@ -206,45 +214,52 @@ int main(int argc, char *argv[]){
 
             }else if(strcmp(token, "/vaccinateNow") == 0){
 
-                Person per = malloc(sizeof(struct personstr));  
                 token = strtok(NULL, " \n");
                 
-                // citizen ID
-                per->citizenID = malloc((strlen(token)+1)*sizeof(char));
-                strcpy(per->citizenID, token);
+                Person per = HTGetItem(citizenRecords, token);
 
-                // first name
-                token = strtok(NULL, " \n");
-                per->firstName = malloc((strlen(token)+1)*sizeof(char)); 
-                strcpy(per->firstName, token);
+                if(per == NULL){
+                    //  Create new person and insert
+                    per = malloc(sizeof(struct personstr));
+                    per->citizenID = malloc((strlen(token)+1)*sizeof(char));
+                    strcpy(per->citizenID, token);
 
-                // last name
-                token = strtok(NULL, " \n");
-                per->lastName = malloc((strlen(token)+1)*sizeof(char)); 
-                strcpy(per->lastName, token);
+                    // first name
+                    token = strtok(NULL, " \n");
+                    per->firstName = malloc((strlen(token)+1)*sizeof(char)); 
+                    strcpy(per->firstName, token);
 
-                // country
-                token = strtok(NULL, " ");
-                Country country = HTGetItem(countries, token);
-                if(country == NULL){
-                    char *name = malloc((strlen(token)+1)*sizeof(char)); 
-                    strcpy(name, token);
+                    // last name
+                    token = strtok(NULL, " \n");
+                    per->lastName = malloc((strlen(token)+1)*sizeof(char)); 
+                    strcpy(per->lastName, token);
+                                    
+                    // country
+                    token = strtok(NULL, " \n");
+                    Country country = HTGetItem(countries, token);
+                    if(country == NULL){
+                        char *name = malloc((strlen(token)+1)*sizeof(char)); 
+                        strcpy(name, token);
 
-                    country = newCountry(name);
-                    
-                    HTInsert(countries, name, country);
+                        country = newCountry(name);
+                        
+                        HTInsert(countries, name, country);
+                    }
+
+                    country->population += 1;
+                    per->country = country;
+
+                    // age
+                    token = strtok(NULL, " \n");
+                    per->age = atoi(token);
+
+                    incrementAgePopulation(country, per->age);
+
+                    HTInsert(citizenRecords, per->citizenID, per);
+                }else{
+                    // ignore person's information
+                    for(int i = 0; i < 4; i++) strtok(NULL, " \n");
                 }
-
-                country->population += 1;
-                per->country = country;
-
-                // age
-                token = strtok(NULL, " ");
-                per->age = atoi(token);
-
-                incrementAgePopulation(country, per->age);
-
-                HTInsert(citizenRecords, per->citizenID, per);
                 
                 // virus
                 Virus vir = NULL;
