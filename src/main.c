@@ -14,6 +14,8 @@
 // TODO: error checking 
 int main(int argc, char *argv[]){
 
+    printf("Inserting records, please wait...");
+
     char *filePath;
     int bloomSize;
 
@@ -22,8 +24,9 @@ int main(int argc, char *argv[]){
     HTHash citizenRecords = HTCreate();
     HTHash countries = HTCreate();
     HTHash viruses = HTCreate();
-
+    
     parseInputFile(filePath, bloomSize, citizenRecords, countries, viruses);
+    printf("Done.\n");
 
     char *buf = malloc(MAX_LINE*sizeof(char));
     memset(buf, 0, MAX_LINE);
@@ -382,13 +385,9 @@ int main(int argc, char *argv[]){
                 list_nonVaccinated_Persons(v, countries);
 
             }else if(strcmp(token, "/exit") == 0){
-
                 break;
-
             }else{
-
-                printf("Invalid command\n");
-
+                fprintf(stderr, "Invalid command\n");
             }
         }
     }

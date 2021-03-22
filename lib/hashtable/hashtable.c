@@ -51,7 +51,10 @@ void HTRehash(HTHash hash){
 	}
 	hash->curSize *= 2;
 	for(int i = 0; i < n; i++){
-		HTInsert(hash, entries[i]->key, entries[i]->item);	
+		char *key = entries[i]->key;
+		HTItem item = entries[i]->item;
+		free(entries[i]);
+		HTInsert(hash, key, item);
 	}
 	free(entries);
 }

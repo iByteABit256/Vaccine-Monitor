@@ -29,7 +29,7 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
     if(rec->date == NULL){
         // Citizen is not vaccinated
         skipInsert(vir->not_vaccinated_persons, rec->per->citizenID, rec);
-        printf("Inserted %s to not-vaccinated list\n", rec->per->lastName);
+        //printf("Inserted %s to not-vaccinated list\n", rec->per->lastName);
     }else{
         // Citizen is vaccinated
         VaccRecord found = skipGet(vir->vaccinated_persons, rec->per->citizenID);
@@ -43,7 +43,7 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
             // Citizen is inserted
             skipInsert(vir->vaccinated_persons, rec->per->citizenID, rec);
             bloomInsert(vir->vaccinated_bloom, rec->per->citizenID); 
-            printf("Inserted %s to vaccinated list\n", rec->per->lastName);
+            //printf("Inserted %s to vaccinated list\n", rec->per->lastName);
         }
     }
 }
