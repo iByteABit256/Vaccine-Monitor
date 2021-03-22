@@ -220,10 +220,10 @@ void popStatusByAge(Virus vir, Date d1, Date d2, HTHash countries, char *country
             }
 
             printf("%s\n", name);
-            printf("0-19 %d %0.2f%%\n", agePopulation[0], percentages[0]);
-            printf("20-39 %d %0.2f%%\n", agePopulation[1], percentages[1]);
-            printf("40-59 %d %0.2f%%\n", agePopulation[2], percentages[2]);
-            printf("60+ %d %0.2f%%\n\n", agePopulation[3], percentages[3]);
+            printf("0-19 %d %0.2f%%\n", ageCounter[0], percentages[0]);
+            printf("20-39 %d %0.2f%%\n", ageCounter[1], percentages[1]);
+            printf("40-59 %d %0.2f%%\n", ageCounter[2], percentages[2]);
+            printf("60+ %d %0.2f%%\n\n", ageCounter[3], percentages[3]);
 
             // set counter back to zero
             for(int i = 0; i < 4; i++){

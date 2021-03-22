@@ -49,7 +49,7 @@ Listptr ListSearch(Listptr list, ItemType item){
    if(list == NULL){
 		return NULL;
 	}
-	if(list->next == list->tail) return NULL;
+   if(list->next == list->tail) return NULL;
    else list = list->next;
    while(list->next != list->tail){
       if(item ==  list->value) return list;
@@ -62,19 +62,19 @@ Listptr ListSearch(Listptr list, ItemType item){
 void ListInsertLast(Listptr list, ItemType item){
    if(list == NULL){
       printf("Error: list not initialized\n");
-	}
+   }
    Listptr new = malloc(sizeof(Listnode));
    new->head = list->head;
    new->tail = list->tail;
-	new->next = list->tail;
+   new->next = list->tail;
    new->value = item;
-	Listptr temp = list->head;
-	while(temp->next != list->tail) temp = temp->next;
-	temp->next = new;
+   Listptr temp = list->head;
+   while(temp->next != list->tail) temp = temp->next;
+   temp->next = new;
 }
 
 void ListInsertAfter(Listptr list, ItemType item, Listptr node){
-   if(list == NULL){
+    if(list == NULL){
       printf("Error: list not initialized\n");
 	}
 	if(node != list->tail){
@@ -150,4 +150,3 @@ Listptr ListGetLast(Listptr list){
 	if(l == list->head) return NULL;
 	else return l;
 }
-
