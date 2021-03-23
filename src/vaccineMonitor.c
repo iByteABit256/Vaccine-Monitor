@@ -110,7 +110,7 @@ void list_nonVaccinated_Persons(Virus v, HTHash countries){
 void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *countryName){
     // error if only one date was given
     if((d1 == NULL)^(d2 == NULL)){
-        fprintf(stderr, "Invalid input\n");
+        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
         return;
     }
 
@@ -166,7 +166,7 @@ void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *count
 void popStatusByAge(Virus vir, Date d1, Date d2, HTHash countries, char *countryName){
     // error if only one date was given
     if((d1 == NULL)^(d2 == NULL)){
-        fprintf(stderr, "Invalid input\n");
+        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
         return;
     }
 
