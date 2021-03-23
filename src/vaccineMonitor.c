@@ -233,3 +233,40 @@ void popStatusByAge(Virus vir, Date d1, Date d2, HTHash countries, char *country
 		}
 	}
 }
+
+void printHelp(void){
+
+    printf("\t\tCommands\n");
+    printf("\t\t--------\n\n");
+
+    printf("/vaccineStatusBloom citizenID virusName\n");
+    printf("\tChecks bloom filter to see if citizenID is\
+ vaccinated against the given virus\n\n");
+
+    printf("/vaccineStatus citizenID virusName\n");
+    printf("\tChecks if citizen is vaccinated against given virus\n\n");
+
+    printf("/vaccineStatus citizenID\n");
+    printf("\tChecks vaccine status of citizen for every known virus\n\n");
+
+    printf("/populationStatus [country] virusName [date1 date2]\n");
+    printf("\tPrints vaccine statistics of all countries for a given virus\n");
+    printf("\tIf a country is given, statistics are printed for the specific country only\n");
+    printf("\tIf a start date and end date are given,\n\tonly records within that timeline are\
+ taken into account\n\n");
+
+    printf("/popStatusByAge [country] virusName [date1 date2]\n");
+    printf("\tPrints vaccine statistics by age group of all countries for a given virus\n");
+    printf("\tIf a country is given, statistics are printed for the specific country only\n");
+    printf("\tIf a start date and end date are given,\n\tonly records within that timeline are\
+ taken into account\n\n");
+
+    printf("/vaccinateNow citizenID firstName lastName country age virusName\n");
+    printf("\tVaccinates given citizen if not already vaccinated\n\n");
+
+    printf("/list-nonVaccinated-Persons virusName\n");
+    printf("\tPrints all citizens who are not vaccinated against given virus\n\n");
+
+    printf("/exit\n");
+    printf("\tExits program\n\n");
+}

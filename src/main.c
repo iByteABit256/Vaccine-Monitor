@@ -384,6 +384,8 @@ int main(int argc, char *argv[]){
                 Virus v = HTGetItem(viruses, token); 
                 list_nonVaccinated_Persons(v, countries);
 
+            }else if(strcmp(token, "/help") == 0){
+                printHelp();
             }else if(strcmp(token, "/exit") == 0){
                 break;
             }else{
