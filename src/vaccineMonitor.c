@@ -37,7 +37,7 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
             // Vaccination already recorded
             Person p = found->per;
             Date d = found->date;
-            printf("ERROR: CITIZEN %s ALREADY VACCINATED ON %d-%d-%d\n",
+            printf("ERROR: CITIZEN %s ALREADY VACCINATED ON %02d-%02d-%04d\n\n",
                     p->citizenID, d->day, d->month, d->year);
         }else{
             // Citizen is inserted
@@ -51,12 +51,12 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
 // check if citizen exists in virus bloom filter
 void vaccineStatusBloom(char *citizenID, Virus vir){
     if(vir == NULL){
-        printf("NO\n");
+        fprintf(stderr, "ERROR: NO INFORMATION ABOUT GIVEN VIRUS\n\n");
         return;
     }
 
     int vaccinated = bloomExists(vir->vaccinated_bloom, citizenID);
-    printf("%s\n", vaccinated? "MAYBE" : "NO");
+    printf("%s\n\n", vaccinated? "MAYBE" : "NOT VACCINATED");
 }
 
 // check if citizen exists in virus skiplist
@@ -69,10 +69,10 @@ void vaccineStatus(char *citizenID, Virus vir, HTHash viruses){
                 char *vname = vir->name;
                 VaccRecord rec = skipGet(vir->vaccinated_persons, citizenID);
                 if(rec){
-                    printf("%s YES %d-%d-%d\n", vname, rec->date->day, 
+                    printf("%s YES %02d-%02d-%04d\n\n", vname, rec->date->day, 
                            rec->date->month, rec->date->year);
                 }else{
-                    printf("%s NO\n", vname);
+                    printf("%s NO\n\n", vname);
                 }
             }
         }
@@ -84,16 +84,16 @@ void vaccineStatus(char *citizenID, Virus vir, HTHash viruses){
     VaccRecord rec = skipGet(vir->vaccinated_persons, citizenID);
 
     if(rec){
-        printf("YES %d-%d-%d\n", rec->date->day, rec->date->month, rec->date->year);
+        printf("VACCINATED ON %02d-%02d-%04d\n\n", rec->date->day, rec->date->month, rec->date->year);
     }else{
-        printf("NO\n");
+        printf("NOT VACCINATED\n\n");
     }
 }
 
 // prints every non vaccinated person of a specific virus 
 void list_nonVaccinated_Persons(Virus v, HTHash countries){
     if(v == NULL){
-        printf("No records found\n");
+        printf("NO RECORDS FOUND\n\n");
     }else{
         Skiplist skip = v->not_vaccinated_persons;
         
@@ -104,13 +104,25 @@ void list_nonVaccinated_Persons(Virus v, HTHash countries){
             printf("%s %s %s %s %d\n", per->citizenID, per->firstName,
                     per->lastName, per->country->name, per->age);
         }
+        printf("\n");
     }
 }
 
 void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *countryName){
+    // error if virus not in records
+    if(vir == NULL){
+        fprintf(stderr, "ERROR: NO INFORMATION ABOUT VIRUS\n\n");
+        return;
+    }
+
+    // error if country not in records
+    if(!HTExists(countries, countryName)){
+        fprintf(stderr, "ERROR: NO INFORMATION ABOUT COUNTRY\n\n");
+    }
+
     // error if only one date was given
     if((d1 == NULL)^(d2 == NULL)){
-        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
         return;
     }
 
@@ -161,12 +173,24 @@ void populationStatus(Virus vir, Date d1, Date d2, HTHash countries, char *count
 
 		}
 	}
+    printf("\n");
 }
 
 void popStatusByAge(Virus vir, Date d1, Date d2, HTHash countries, char *countryName){
+    // error if virus not in records
+    if(vir == NULL){
+        fprintf(stderr, "ERROR: NO INFORMATION ABOUT VIRUS\n\n");
+        return;
+    }
+
+    // error if country not in records
+    if(!HTExists(countries, countryName)){
+        fprintf(stderr, "ERROR: NO INFORMATION ABOUT COUNTRY\n\n");
+    }
+
     // error if only one date was given
     if((d1 == NULL)^(d2 == NULL)){
-        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
         return;
     }
 
@@ -260,6 +284,9 @@ void printHelp(void){
     printf("\tIf a country is given, statistics are printed for the specific country only\n");
     printf("\tIf a start date and end date are given,\n\tonly records within that timeline are\
  taken into account\n\n");
+
+    printf("/insertCitizenRecord citizenID firstName lastName country age virusName YES/NO [date]\n");
+    printf("\tInserts new citizen record or updates the existing one\n\n");
 
     printf("/vaccinateNow citizenID firstName lastName country age virusName\n");
     printf("\tVaccinates given citizen if not already vaccinated\n\n");

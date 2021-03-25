@@ -76,7 +76,7 @@ void freeMemory(HTHash countries, HTHash viruses, HTHash citizenRecords){
 // TODO: error checking 
 int main(int argc, char *argv[]){
 
-    printf("Inserting records, please wait...");
+    printf("Inserting records, please wait...\n");
 
     char *filePath;
     int bloomSize;
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]){
     HTHash viruses = HTCreate();
     
     parseInputFile(filePath, bloomSize, citizenRecords, countries, viruses);
-    printf("Done.\n");
+    printf("Done.\n\n");
 
     inputLoop(countries, viruses, citizenRecords, bloomSize);
 

@@ -134,9 +134,18 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
         if(vaccinated){
             date = malloc(sizeof(struct datestr));
 
-            date->day = atoi(strtok(token, "-\n")); 
-            date->month = atoi(strtok(NULL, "-\n")); 
-            date->year = atoi(strtok(NULL, "-\n")); 
+            char *datetok1 = strtok(token, "-\n");
+            char *datetok2 = strtok(NULL, "-\n");
+            char *datetok3 = strtok(NULL, "-\n");
+            if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                date->day = atoi(datetok1); 
+                date->month = atoi(datetok2); 
+                date->year = atoi(datetok3);
+            }else{
+                fprintf(stderr, "ERROR: INCORRECT RECORD IN INPUT FILE\n");
+                free(date);
+                continue;
+            }
         }else{
             if(token != NULL){
                 fprintf(stderr, "ERROR: INCORRECT RECORD IN INPUT FILE\n");
@@ -167,6 +176,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
             char *token = strtok(buf, " \n"); 
 
             if(token == NULL){
+                fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                 continue;
             }
 
@@ -176,7 +186,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
@@ -186,7 +196,13 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                    continue;
+                }
+
+                if(!HTExists(citizenRecords, citizenID)){
+                    fprintf(stderr, "ERROR: NO CITIZEN FOUND WITH ID %s\n\n", citizenID);
+                    free(citizenID);
                     continue;
                 }
 
@@ -200,20 +216,21 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
                 char *citizenID = malloc((strlen(token)+1)*sizeof(char));
                 strcpy(citizenID, token);
 
-                token = strtok(NULL, " \n");
-
-                if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                if(!HTExists(citizenRecords, citizenID)){
+                    fprintf(stderr, "ERROR: NO CITIZEN FOUND WITH ID %s\n\n", citizenID);
+                    free(citizenID);
                     continue;
                 }
-                
+
+                token = strtok(NULL, " \n");
+
                 Virus vir = HTGetItem(viruses, token);
 
                 vaccineStatus(citizenID, vir, viruses);
@@ -227,7 +244,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 char *par4 = strtok(NULL, " \n");
 
                 if(par1 == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
@@ -242,9 +259,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d1 = malloc(sizeof(struct datestr));
 
-                        d1->day = atoi(strtok(par2, "-\n")); 
-                        d1->month = atoi(strtok(NULL, "-\n")); 
-                        d1->year = atoi(strtok(NULL, "-\n"));
+                        char *datetok1 = strtok(par2, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d1->day = atoi(datetok1); 
+                            d1->month = atoi(datetok2); 
+                            d1->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d1);
+                            continue;
+                        }
                     }
 
                     if(par3 == NULL){
@@ -252,9 +278,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d2 = malloc(sizeof(struct datestr));
 
-                        d2->day = atoi(strtok(par3, "-\n")); 
-                        d2->month = atoi(strtok(NULL, "-\n")); 
-                        d2->year = atoi(strtok(NULL, "-\n"));
+                        char *datetok1 = strtok(par3, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d2->day = atoi(datetok1); 
+                            d2->month = atoi(datetok2); 
+                            d2->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d2);
+                            continue;
+                        }
                     }
 
                     populationStatus(vir, d1, d2, countries, NULL);
@@ -263,7 +298,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     // Country given
 
                     if(par2 == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -276,9 +311,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d1 = malloc(sizeof(struct datestr));
 
-                        d1->day = atoi(strtok(par3, "-\n")); 
-                        d1->month = atoi(strtok(NULL, "-\n")); 
-                        d1->year = atoi(strtok(NULL, "-\n"));
+                        char *datetok1 = strtok(par3, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d1->day = atoi(datetok1); 
+                            d1->month = atoi(datetok2); 
+                            d1->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d1);
+                            continue;
+                        }
                     }
 
                     if(par4 == NULL){
@@ -286,10 +330,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d2 = malloc(sizeof(struct datestr));
 
-                        d2->day = atoi(strtok(par4, "-\n")); 
-                        d2->month = atoi(strtok(NULL, "-\n")); 
-                        d2->year = atoi(strtok(NULL, "-\n"));
-
+                        char *datetok1 = strtok(par4, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d2->day = atoi(datetok1); 
+                            d2->month = atoi(datetok2); 
+                            d2->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d2);
+                            continue;
+                        }
                     }
                     populationStatus(vir, d1, d2, countries, par1);
                 }
@@ -302,13 +354,15 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 char *par4 = strtok(NULL, " \n");
 
                 if(par1 == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
                 if(!HTExists(countries, par1)){
                     // No country given
                     Virus vir = HTGetItem(viruses, par1);
+
+                    
 
                     Date d1, d2; 
 
@@ -317,9 +371,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d1 = malloc(sizeof(struct datestr));
 
-                        d1->day = atoi(strtok(par2, "-\n")); 
-                        d1->month = atoi(strtok(NULL, "-\n")); 
-                        d1->year = atoi(strtok(NULL, "-\n"));
+                        char *datetok1 = strtok(par2, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d1->day = atoi(datetok1); 
+                            d1->month = atoi(datetok2); 
+                            d1->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d1);
+                            continue;
+                        }
                     }
 
                     if(par3 == NULL){
@@ -327,9 +390,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d2 = malloc(sizeof(struct datestr));
 
-                        d2->day = atoi(strtok(par3, "-\n")); 
-                        d2->month = atoi(strtok(NULL, "-\n")); 
-                        d2->year = atoi(strtok(NULL, "-\n"));
+                        char *datetok1 = strtok(par3, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d2->day = atoi(datetok1); 
+                            d2->month = atoi(datetok2); 
+                            d2->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d2);
+                            continue;
+                        }
                     }
 
                     popStatusByAge(vir, d1, d2, countries, NULL);
@@ -338,7 +410,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     // Country given
 
                     if(par2 == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -351,9 +423,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d1 = malloc(sizeof(struct datestr));
 
-                        d1->day = atoi(strtok(par3, "-\n")); 
-                        d1->month = atoi(strtok(NULL, "-\n")); 
-                        d1->year = atoi(strtok(NULL, "-\n"));
+                        char *datetok1 = strtok(par3, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d1->day = atoi(datetok1); 
+                            d1->month = atoi(datetok2); 
+                            d1->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d1);
+                            continue;
+                        }
                     }
 
                     if(par4 == NULL){
@@ -361,9 +442,18 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }else{
                         d2 = malloc(sizeof(struct datestr));
 
-                        d2->day = atoi(strtok(par4, "-\n")); 
-                        d2->month = atoi(strtok(NULL, "-\n")); 
-                        d2->year = atoi(strtok(NULL, "-\n"));
+                        char *datetok1 = strtok(par4, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            d2->day = atoi(datetok1); 
+                            d2->month = atoi(datetok2); 
+                            d2->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(d2);
+                            continue;
+                        }
 
                     }
                     popStatusByAge(vir, d1, d2, countries, par1);
@@ -375,7 +465,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
                 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
@@ -391,7 +481,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
 
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -402,7 +492,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
 
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -413,7 +503,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
 
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -434,12 +524,22 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
                     per->age = atoi(token);
 
+                    if(per->age <= 0 || per->age > 120){
+                        fprintf(stderr, "ERROR: INVALID AGE\n\n");
+                        free(per->citizenID);
+                        free(per->firstName);
+                        free(per->lastName);
+                        free(per);
+                        continue;
+                    }
+
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
                     incrementAgePopulation(country, per->age);
+
 
                     HTInsert(citizenRecords, per->citizenID, per);
                 }else{
@@ -453,7 +553,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
@@ -472,7 +572,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
@@ -485,18 +585,27 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                 if(vaccinated){
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
                     date = malloc(sizeof(struct datestr));
 
-                    date->day = atoi(strtok(token, "-\n")); 
-                    date->month = atoi(strtok(NULL, "-\n")); 
-                    date->year = atoi(strtok(NULL, "-\n")); 
+                    char *datetok1 = strtok(token, "-\n");
+                        char *datetok2 = strtok(NULL, "-\n");
+                        char *datetok3 = strtok(NULL, "-\n");
+                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                            date->day = atoi(datetok1); 
+                            date->month = atoi(datetok2); 
+                            date->year = atoi(datetok3);
+                        }else{
+                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                            free(date);
+                            continue;
+                        } 
                 }else{
                     if(token != NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         exit(1);  
                     } 
                 }
@@ -513,7 +622,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
                 
@@ -529,7 +638,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
 
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -540,7 +649,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
 
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -551,7 +660,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
 
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
@@ -572,11 +681,20 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
 
                     if(token == NULL){
-                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                         continue;
                     }
 
                     per->age = atoi(token);
+
+                    if(per->age <= 0 || per->age > 120){
+                        fprintf(stderr, "ERROR: INVALID AGE\n\n");
+                        free(per->citizenID);
+                        free(per->firstName);
+                        free(per->lastName);
+                        free(per);
+                        continue;
+                    }
 
                     incrementAgePopulation(country, per->age);
 
@@ -592,7 +710,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
@@ -636,7 +754,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 char *token = strtok(NULL, " \n");
 
                 if(token == NULL){
-                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
@@ -648,7 +766,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
             }else if(strcmp(token, "/exit") == 0){
                 break;
             }else{
-                fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n");
+                fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
             }
         }
     }
