@@ -6,6 +6,10 @@
 #define maxWord 40
 
 int HTHashFunction(char *key, int size){
+	if(key == NULL){
+		return 0;
+	}
+
 	int res = 0, i = 0;
 	while(key[i] != '\0'){
 		res += key[i++];
