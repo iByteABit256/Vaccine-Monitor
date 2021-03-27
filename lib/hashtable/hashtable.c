@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "htInterface.h"
-#define defSize 65
+#define defSize 65 // starting hashtable size
 #define maxWord 40
 
+// sum of characters % hashtable size
 int HTHashFunction(char *key, int size){
 	if(key == NULL){
 		return 0;
@@ -17,20 +18,22 @@ int HTHashFunction(char *key, int size){
 	return res%size;
 }
 
+// searches for key in bucket
 Listptr ListSearchKey(Listptr list, char *item){
-   if(list == NULL){
+    if(list == NULL){
 		return NULL;
 	}
 	if(list->next == list->tail) return NULL;
-   if(list->next != NULL) list = list->next;
-   while(list->next != list->tail){
-      if(!strcmp(item, ((HTEntry)(list->value))->key)) return list;
-      else list = list->next;
+    if(list->next != NULL) list = list->next;
+	while(list->next != list->tail){
+    	if(!strcmp(item, ((HTEntry)(list->value))->key)) return list;
+    	else list = list->next;
 	}
 	if(!strcmp(item, ((HTEntry)(list->value))->key)) return list;
-   return NULL;
+	return NULL;
 }
 
+// initializes new hashtable
 HTHash HTCreate(void){
 	HTHash hash = malloc(sizeof(struct hthash));
 	hash->ht = malloc(sizeof(Listptr)*defSize);
@@ -41,7 +44,10 @@ HTHash HTCreate(void){
 	return hash;
 }
 
+// rehashes all items in hashtable
 void HTRehash(HTHash hash){
+
+	// remove everything and keep it in array
 	HTEntry *entries = malloc(sizeof(struct hashentry)*hash->curSize);
 	int n = 0;
 	for(int i = 0; i < hash->curSize; i++){
@@ -53,6 +59,8 @@ void HTRehash(HTHash hash){
 			l = temp;
 		}
 	}
+
+	// re-insert everything
 	hash->curSize *= 2;
 	for(int i = 0; i < n; i++){
 		char *key = entries[i]->key;
@@ -63,6 +71,7 @@ void HTRehash(HTHash hash){
 	free(entries);
 }
 
+// inserts item in hashtable
 HTHash HTInsert(HTHash hash, char *key, HTItem item){
 	HTEntry entry = malloc(sizeof(struct hashentry));
 	entry->key = key;
@@ -72,13 +81,14 @@ HTHash HTInsert(HTHash hash, char *key, HTItem item){
 	if(list == NULL){
 		ListInsertLast(hash->ht[index], entry);
 	}else{
+		// if item exists, update value
 		((HTEntry)list->value)->item = item;
 		free(entry);
 		return NULL;
 	}
+	// if load ratio is over 90%, double hashtable size and rehash
 	double loadratio = (float)HTSize(hash)/(float)hash->curSize;
 	if(loadratio >= 0.9){
-		//free(entry);
 		hash->ht = realloc(hash->ht, sizeof(Listptr)*2*hash->curSize);
 		for(int i = hash->curSize; i < 2*hash->curSize; i++){
 			hash->ht[i] = ListCreate();	
@@ -88,6 +98,7 @@ HTHash HTInsert(HTHash hash, char *key, HTItem item){
 	return hash;
 }
 
+// # of items in hashtable
 int HTSize(HTHash hash){
 	if(hash->curSize == 0) return 0;
 	int size = 0;
@@ -97,6 +108,7 @@ int HTSize(HTHash hash){
 	return size;
 }
 
+// gets value of item, returns found boolean
 int HTGet(HTHash hash, char *key, HTItem *itemptr){
     if(key == NULL){
         return 0;
@@ -112,6 +124,7 @@ int HTGet(HTHash hash, char *key, HTItem *itemptr){
 	}
 }
 
+// checks if key exists in hashtable
 int HTExists(HTHash hash, char *key){
 	int index = HTHashFunction(key, hash->curSize);
 	Listptr list = ListSearchKey(hash->ht[index], key);
@@ -119,6 +132,7 @@ int HTExists(HTHash hash, char *key){
     return list != NULL;
 }
 
+// removes item with given key
 void HTRemove(HTHash hash, char *key){
 	int index = HTHashFunction(key, hash->curSize);
 	Listptr list = ListSearchKey(hash->ht[index], key);	
@@ -128,6 +142,7 @@ void HTRemove(HTHash hash, char *key){
 	}
 }
 
+// generic traversal function
 void HTVisit(HTHash hash, void (*visit)(HTHash, char *, HTItem)){
 	for(int i = 0; i < hash->curSize; i++){
 		for(Listptr l = hash->ht[i]->next; l != l->tail; l = l->next){
@@ -136,6 +151,7 @@ void HTVisit(HTHash hash, void (*visit)(HTHash, char *, HTItem)){
 	}
 }
 
+// destroys hashtable and frees memory
 void HTDestroy(HTHash hash){
 	for(int i = 0; i < hash->curSize; i++){
 		Listptr l = (Listptr)hash->ht[i]->next;
@@ -155,6 +171,7 @@ void HTDestroy(HTHash hash){
 	free(hash);
 }
 
+// returns value of item
 HTItem HTGetItem(HTHash hash, char *key){
     if(key == NULL){
         return NULL;
@@ -168,4 +185,3 @@ HTItem HTGetItem(HTHash hash, char *key){
 		return NULL;
 	}
 }
-

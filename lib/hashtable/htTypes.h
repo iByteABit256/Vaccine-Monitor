@@ -15,6 +15,7 @@ struct hthash{
 	int curSize;
 	HTEntry *entries;
 };
+
 typedef struct hthash *HTHash;
 
 #else
@@ -26,6 +27,7 @@ struct hthash{
 };
 
 typedef struct hthash *HTHash;
+
 typedef void *HTItem;
 
 struct hashentry{
@@ -34,6 +36,7 @@ struct hashentry{
 };
 
 typedef struct hashentry *HTEntry;
+
 #endif
 
 #endif

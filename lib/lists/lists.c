@@ -5,19 +5,21 @@
 
 char *ItemFormat = "%d";
 
+// Initializes new list
 Listptr ListCreate(){ 
-   Listptr head = malloc(sizeof(Listnode));
-   Listptr tail = malloc(sizeof(Listnode));
-   head->next = tail;
-   head->tail = tail;
-   head->head = head;
-   tail->head = head;
-   tail->tail = tail;
-   tail->next = NULL;
+	Listptr head = malloc(sizeof(Listnode));
+	Listptr tail = malloc(sizeof(Listnode));
+	head->next = tail;
+	head->tail = tail;
+	head->head = head;
+	tail->head = head;
+	tail->tail = tail;
+	tail->next = NULL;
    
-   return head;
+	return head;
 }
 
+// # of items in list
 int ListSize(Listptr list){
 	int size = 0;
 	if(list == NULL) return 0;
@@ -28,6 +30,7 @@ int ListSize(Listptr list){
 	return size;
 }
 
+// prints items in list using ItemFormat
 void ListPrintList(Listptr list){
    if(list == NULL){
       printf("Error: list not initialized\n");
@@ -45,20 +48,22 @@ void ListPrintList(Listptr list){
 	}
 }
 
+// searches for item in list, returns pointer if found
 Listptr ListSearch(Listptr list, ItemType item){
-   if(list == NULL){
+	if(list == NULL){
 		return NULL;
 	}
-   if(list->next == list->tail) return NULL;
-   else list = list->next;
-   while(list->next != list->tail){
-      if(item ==  list->value) return list;
-      else list = list->next;
+	if(list->next == list->tail) return NULL;
+	else list = list->next;
+	while(list->next != list->tail){
+		if(item ==  list->value) return list;
+		else list = list->next;
 	}
 	if(item == list->value) return list;
-   return NULL;
+	return NULL;
 }
 
+// inserts at the end of list
 void ListInsertLast(Listptr list, ItemType item){
    if(list == NULL){
       printf("Error: list not initialized\n");
@@ -73,9 +78,10 @@ void ListInsertLast(Listptr list, ItemType item){
    temp->next = new;
 }
 
+// inserts after specific list node
 void ListInsertAfter(Listptr list, ItemType item, Listptr node){
     if(list == NULL){
-      printf("Error: list not initialized\n");
+		printf("Error: list not initialized\n");
 	}
 	if(node != list->tail){
 		Listptr new = malloc(sizeof(Listnode));
@@ -89,9 +95,10 @@ void ListInsertAfter(Listptr list, ItemType item, Listptr node){
 	}
 }
 
+// deletes last element of list
 void ListDeleteLast(Listptr list){
 	if(list == NULL){
-      printf("Error: list not initialized\n");
+		printf("Error: list not initialized\n");
 	}else{
 		if(list->head->next == list->tail){
 			printf("List is empty\n");
@@ -105,6 +112,7 @@ void ListDeleteLast(Listptr list){
 	}
 }
 
+// deletes list node from list
 void ListDelete(Listptr list, Listptr node){
 	if(list != NULL){
 		if(node == list->head || node == list->tail) printf("Error: Incorrect parameters for delete(Listptr, Listptr)\n");
@@ -122,6 +130,7 @@ void ListDelete(Listptr list, Listptr node){
 	}
 }
 
+// destroys list and frees memory
 void ListDestroy(Listptr list){
 	if(list == NULL) return;
 	Listptr next;
@@ -131,11 +140,13 @@ void ListDestroy(Listptr list){
 	}
 }
 
+// returns next list node
 Listptr ListGetNext(Listptr list){
 	if(list == NULL || list->next == list->tail) return NULL;
 	return list->next;
 }
 
+// returns start of list
 Listptr ListGetFirst(Listptr list){
 	if(list == NULL) return NULL;
 	list = list->head;
@@ -143,6 +154,7 @@ Listptr ListGetFirst(Listptr list){
 	else return NULL;
 }
 
+// returns tail of list
 Listptr ListGetLast(Listptr list){
 	if(list == NULL) return NULL;
 	Listptr l;

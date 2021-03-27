@@ -26,4 +26,3 @@ int compareDates(Date d1, Date d2){
 
     return 0;
 }
-

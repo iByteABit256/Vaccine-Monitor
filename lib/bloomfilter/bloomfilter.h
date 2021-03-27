@@ -11,4 +11,3 @@ BloomFilter bloomInitialize(unsigned int);
 unsigned int bloomInsert(BloomFilter, char *);
 unsigned int bloomExists(BloomFilter, char *);
 void bloomDestroy(BloomFilter);
-

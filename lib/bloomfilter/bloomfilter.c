@@ -54,4 +54,3 @@ unsigned int bloomExists(BloomFilter bl, char *s){
 void bloomDestroy(BloomFilter bl){
     free(bl->bloom);
 }
-

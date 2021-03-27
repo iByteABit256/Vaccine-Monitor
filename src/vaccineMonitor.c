@@ -50,6 +50,7 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
 
 // check if citizen exists in virus bloom filter
 void vaccineStatusBloom(char *citizenID, Virus vir){
+    // virus doesn't exist
     if(vir == NULL){
         fprintf(stderr, "ERROR: NO INFORMATION ABOUT GIVEN VIRUS\n\n");
         return;
@@ -92,6 +93,7 @@ void vaccineStatus(char *citizenID, Virus vir, HTHash viruses){
 
 // prints every non vaccinated person of a specific virus 
 void list_nonVaccinated_Persons(Virus v, HTHash countries){
+    // no records about virus
     if(v == NULL){
         printf("NO RECORDS FOUND\n\n");
     }else{
@@ -258,6 +260,7 @@ void popStatusByAge(Virus vir, Date d1, Date d2, HTHash countries, char *country
 	}
 }
 
+// prints a description of every available command
 void printHelp(void){
 
     printf("\t\tCommands\n");

@@ -234,4 +234,3 @@ void skipPrint(Skiplist sl){
 
     printf("\n");
 }
-

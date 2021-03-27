@@ -28,4 +28,3 @@ void *skipGet(Skiplist, char *);
 void skipDelete(Skiplist, char *);
 void skipDestroy(Skiplist);
 void skipPrint(Skiplist);
-

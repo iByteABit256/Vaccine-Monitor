@@ -11,4 +11,3 @@ int ListSize(Listptr list);
 Listptr ListGetNext(Listptr);
 Listptr ListGetFirst(Listptr);
 Listptr ListGetLast(Listptr);
-

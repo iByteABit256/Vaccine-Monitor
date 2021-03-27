@@ -50,6 +50,7 @@ void parseExecutableParameters(int argc, char *argv[], char **fP, int *bS){
     *bS = bloomSize;
 }
 
+// Insert citizen records from input file
 void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash countries, HTHash viruses){
 
     FILE *inputFile = fopen(filePath, "r");
@@ -99,6 +100,15 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
             token = strtok(NULL, " \n");
             per->age = atoi(token);
 
+            if(per->age <= 0 || per->age > 120){
+                fprintf(stderr, "ERROR: INVALID AGE\n\n");
+                free(per->citizenID);
+                free(per->firstName);
+                free(per->lastName);
+                free(per);
+                continue;
+            }
+
             incrementAgePopulation(country, per->age);
 
             HTInsert(citizenRecords, per->citizenID, per);
@@ -143,7 +153,17 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
 
         // yes/no
         token = strtok(NULL, " \n");
-        char vaccinated = (strcmp(token, "YES") == 0);
+
+        char vaccinated;
+
+        if(strcmp(token, "YES")){
+            vaccinated = 1;
+        }else if(strcmp(token, "NO")){
+            vaccinated = 0;
+        }else{
+            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+            continue;
+        }
 
         // date
         Date date = NULL;
@@ -156,6 +176,8 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
             char *datetok1 = strtok(token, "-\n");
             char *datetok2 = strtok(NULL, "-\n");
             char *datetok3 = strtok(NULL, "-\n");
+
+            //check if date is valid
             if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                 date->day = atoi(datetok1); 
                 date->month = atoi(datetok2); 
@@ -184,6 +206,7 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
     free(buf);
 }
 
+// user input loop
 void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloomSize){
     char *buf = malloc(MAX_LINE*sizeof(char));
     memset(buf, 0, MAX_LINE);
@@ -200,6 +223,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
             }
 
             // Command name
+
+            // vaccinateStatusBloom
             if(strcmp(token, "/vaccineStatusBloom") == 0){
 
                 token = strtok(NULL, " \n");
@@ -219,6 +244,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     continue;
                 }
 
+                // check if citizen exists
                 if(!HTExists(citizenRecords, citizenID)){
                     fprintf(stderr, "ERROR: NO CITIZEN FOUND WITH ID %s\n\n", citizenID);
                     free(citizenID);
@@ -230,6 +256,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 vaccineStatusBloom(citizenID, vir);
                 free(citizenID);
 
+            // vaccineStatus
             }else if(strcmp(token, "/vaccineStatus") == 0){
 
                 token = strtok(NULL, " \n");
@@ -241,6 +268,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                 char *citizenID = malloc((strlen(token)+1)*sizeof(char));
                 strcpy(citizenID, token);
+
+                // check if citizen exists
 
                 if(!HTExists(citizenRecords, citizenID)){
                     fprintf(stderr, "ERROR: NO CITIZEN FOUND WITH ID %s\n\n", citizenID);
@@ -255,6 +284,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 vaccineStatus(citizenID, vir, viruses);
                 free(citizenID);
 
+
+            // populationStatus
             }else if(strcmp(token, "/populationStatus") == 0){
 
                 char *par1 = strtok(NULL, " \n");
@@ -262,11 +293,13 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 char *par3 = strtok(NULL, " \n");
                 char *par4 = strtok(NULL, " \n");
 
+                // no argument given
                 if(par1 == NULL){
                     fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
                     continue;
                 }
 
+                // check if first argument is a country
                 if(!HTExists(countries, par1)){
                     // No country given
                     Virus vir = HTGetItem(viruses, par1);
@@ -281,6 +314,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par2, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d1->day = atoi(datetok1); 
                             d1->month = atoi(datetok2); 
@@ -300,6 +335,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par3, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d2->day = atoi(datetok1); 
                             d2->month = atoi(datetok2); 
@@ -333,6 +370,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par3, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d1->day = atoi(datetok1); 
                             d1->month = atoi(datetok2); 
@@ -352,6 +391,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par4, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d2->day = atoi(datetok1); 
                             d2->month = atoi(datetok2); 
@@ -362,9 +403,11 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                             continue;
                         }
                     }
+
                     populationStatus(vir, d1, d2, countries, par1);
                 }
 
+            // popStatusByAge
             }else if(strcmp(token, "/popStatusByAge") == 0){
 
                 char *par1 = strtok(NULL, " \n");
@@ -377,6 +420,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     continue;
                 }
 
+                // check if first argument is country
                 if(!HTExists(countries, par1)){
                     // No country given
                     Virus vir = HTGetItem(viruses, par1);
@@ -393,6 +437,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par2, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d1->day = atoi(datetok1); 
                             d1->month = atoi(datetok2); 
@@ -412,6 +458,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par3, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d2->day = atoi(datetok1); 
                             d2->month = atoi(datetok2); 
@@ -445,6 +493,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par3, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d1->day = atoi(datetok1); 
                             d1->month = atoi(datetok2); 
@@ -464,6 +514,8 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         char *datetok1 = strtok(par4, "-\n");
                         char *datetok2 = strtok(NULL, "-\n");
                         char *datetok3 = strtok(NULL, "-\n");
+
+                        // check if date is valid
                         if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
                             d2->day = atoi(datetok1); 
                             d2->month = atoi(datetok2); 
@@ -475,9 +527,11 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                         }
 
                     }
+
                     popStatusByAge(vir, d1, d2, countries, par1);
                 }
 
+            // insertCitizenRecord
             }else if(strcmp(token, "/insertCitizenRecord") == 0){
 
                 // citizen ID
@@ -491,7 +545,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 Person per = HTGetItem(citizenRecords, token);
 
                 if(per == NULL){
-                    //  Create new person and insert
+                    //  If person doesn't exist yet, create new person and insert
                     per = malloc(sizeof(struct personstr));
                     per->citizenID = malloc((strlen(token)+1)*sizeof(char));
                     strcpy(per->citizenID, token);
@@ -543,6 +597,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     token = strtok(NULL, " \n");
                     per->age = atoi(token);
 
+                    // check if age is valid
                     if(per->age <= 0 || per->age > 120){
                         fprintf(stderr, "ERROR: INVALID AGE\n\n");
                         free(per->citizenID);
@@ -558,7 +613,6 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }
 
                     incrementAgePopulation(country, per->age);
-
 
                     HTInsert(citizenRecords, per->citizenID, per);
                 }else{
@@ -595,6 +649,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     continue;
                 }
 
+                // check if virus exists in records
                 if(!HTGet(viruses, token, (HTItem *)&vir)){
                     vir = malloc(sizeof(struct virusstr));
                     vir->name = malloc((strlen(token)+1)*sizeof(char)); 
@@ -614,7 +669,16 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     continue;
                 }
 
-                char vaccinated = (strcmp(token, "YES") == 0);
+                char vaccinated;
+
+                if(strcmp(token, "YES")){
+                    vaccinated = 1;
+                }else if(strcmp(token, "NO")){
+                    vaccinated = 0;
+                }else{
+                    fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                    continue;
+                }
 
                 // date
                 Date date = NULL;
@@ -630,17 +694,19 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     date = malloc(sizeof(struct datestr));
 
                     char *datetok1 = strtok(token, "-\n");
-                        char *datetok2 = strtok(NULL, "-\n");
-                        char *datetok3 = strtok(NULL, "-\n");
-                        if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
-                            date->day = atoi(datetok1); 
-                            date->month = atoi(datetok2); 
-                            date->year = atoi(datetok3);
-                        }else{
-                            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
-                            free(date);
-                            continue;
-                        } 
+                    char *datetok2 = strtok(NULL, "-\n");
+                    char *datetok3 = strtok(NULL, "-\n");
+
+                    // check if date is valid
+                    if(datetok1 != NULL && datetok2 != NULL && datetok3 != NULL){
+                        date->day = atoi(datetok1); 
+                        date->month = atoi(datetok2); 
+                        date->year = atoi(datetok3);
+                    }else{
+                        fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+                        free(date);
+                        continue;
+                    }
                 }else{
                     if(token != NULL){
                         fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
@@ -655,6 +721,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                 insertCitizenRecord(rec, vir);
 
+            // vaccinateNow
             }else if(strcmp(token, "/vaccinateNow") == 0){
 
                 token = strtok(NULL, " \n");
@@ -725,6 +792,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                     per->age = atoi(token);
 
+                    // check if age is valid
                     if(per->age <= 0 || per->age > 120){
                         fprintf(stderr, "ERROR: INVALID AGE\n\n");
                         free(per->citizenID);
@@ -806,6 +874,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 
                 insertCitizenRecord(rec, vir);
 
+            // list-nonVaccinated-Persons
             }else if(strcmp(token, "/list-nonVaccinated-Persons") == 0){
 
                 char *token = strtok(NULL, " \n");
@@ -818,10 +887,15 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 Virus v = HTGetItem(viruses, token); 
                 list_nonVaccinated_Persons(v, countries);
 
+            // help
             }else if(strcmp(token, "/help") == 0){
                 printHelp();
+            
+            // exit
             }else if(strcmp(token, "/exit") == 0){
                 break;
+
+            // incorrect input
             }else{
                 fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
             }
