@@ -103,8 +103,27 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
 
             HTInsert(citizenRecords, per->citizenID, per);
         }else{
-            // ignore person's information
-            for(int i = 0; i < 4; i++) strtok(NULL, " \n");
+            // check person's information
+            token = strtok(NULL, " \n");
+            if(strcmp(token, per->firstName)){
+                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                continue;
+            }
+            token = strtok(NULL, " \n");
+            if(strcmp(token, per->lastName)){
+                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                continue;
+            }
+            token = strtok(NULL, " \n");
+            if(strcmp(token, per->country->name)){
+                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                continue;
+            }
+            token = strtok(NULL, " \n");
+            if(atoi(token) != per->age){
+                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                continue;
+            }
         }
         
         // virus
@@ -543,8 +562,27 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                     HTInsert(citizenRecords, per->citizenID, per);
                 }else{
-                    // ignore person's information
-                    for(int i = 0; i < 4; i++) strtok(NULL, " \n");
+                    // check person's information
+                    token = strtok(NULL, " \n");
+                    if(strcmp(token, per->firstName)){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
+                    token = strtok(NULL, " \n");
+                    if(strcmp(token, per->lastName)){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
+                    token = strtok(NULL, " \n");
+                    if(strcmp(token, per->country->name)){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
+                    token = strtok(NULL, " \n");
+                    if(atoi(token) != per->age){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
                 }
                 
                 // virus
@@ -700,8 +738,27 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                     HTInsert(citizenRecords, per->citizenID, per);
                 }else{
-                    // ignore person's information
-                    for(int i = 0; i < 4; i++) strtok(NULL, " \n");
+                    // check person's information
+                    token = strtok(NULL, " \n");
+                    if(strcmp(token, per->firstName)){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
+                    token = strtok(NULL, " \n");
+                    if(strcmp(token, per->lastName)){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
+                    token = strtok(NULL, " \n");
+                    if(strcmp(token, per->country->name)){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
+                    token = strtok(NULL, " \n");
+                    if(atoi(token) != per->age){
+                        fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                        continue;
+                    }
                 }
                 
                 // virus
