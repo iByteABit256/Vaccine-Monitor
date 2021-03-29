@@ -156,9 +156,9 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
 
         char vaccinated;
 
-        if(strcmp(token, "YES")){
+        if(!strcmp(token, "YES")){
             vaccinated = 1;
-        }else if(strcmp(token, "NO")){
+        }else if(!strcmp(token, "NO")){
             vaccinated = 0;
         }else{
             fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
@@ -190,7 +190,7 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
         }else{
             if(token != NULL){
                 fprintf(stderr, "ERROR: INCORRECT RECORD IN INPUT FILE\n");
-                exit(1);  
+                continue; 
             } 
         }
 
@@ -671,9 +671,9 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                 char vaccinated;
 
-                if(strcmp(token, "YES")){
+                if(!strcmp(token, "YES")){
                     vaccinated = 1;
-                }else if(strcmp(token, "NO")){
+                }else if(!strcmp(token, "NO")){
                     vaccinated = 0;
                 }else{
                     fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
@@ -710,7 +710,7 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 }else{
                     if(token != NULL){
                         fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
-                        exit(1);  
+                        continue;
                     } 
                 }
 

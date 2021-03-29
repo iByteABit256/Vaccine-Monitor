@@ -24,7 +24,6 @@ BloomFilter bloomInitialize(unsigned int size){
     bl->size = size;
     memset(bl->bloom, 0, size);
 
-    //TODO: error checking
     return bl;
 }
 
@@ -35,7 +34,6 @@ unsigned int bloomInsert(BloomFilter bl, char *s){
         setBit(bl->bloom, hash_i((unsigned char *)s,i)%bl->size);
     } 
 
-    // TODO: error checking
     return 1;
 }
 
