@@ -52,6 +52,23 @@ Invalid input checking
 
 
 
+Age population statistics
+--------------------------
+
+Ages are grouped as following:
+
+0-19
+20-39
+40-59
+60+
+
+It's different to the requsted output
+but with this grouping there are no
+common sub-sections between the groups.
+Also the groups are evenly sized, except 60+.
+
+
+
 Data Structures
 ----------------
 

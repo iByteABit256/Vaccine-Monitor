@@ -56,10 +56,13 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
     FILE *inputFile = fopen(filePath, "r");
 
     char *buf = malloc(MAX_LINE*sizeof(char));
+    char *errLine = malloc(MAX_LINE*sizeof(char));
     memset(buf, 0, MAX_LINE);
+    memset(errLine, 0, MAX_LINE);
 
     // Read input file
     while(fgets(buf, MAX_LINE, inputFile) != NULL){
+        strcpy(errLine, buf);
 
         char *token = strtok(buf, " \n");
                 
@@ -101,7 +104,7 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
             per->age = atoi(token);
 
             if(per->age <= 0 || per->age > 120){
-                fprintf(stderr, "ERROR: INVALID AGE\n\n");
+                fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
                 free(per->citizenID);
                 free(per->firstName);
                 free(per->lastName);
@@ -116,22 +119,22 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
             // check person's information
             token = strtok(NULL, " \n");
             if(strcmp(token, per->firstName)){
-                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
                 continue;
             }
             token = strtok(NULL, " \n");
             if(strcmp(token, per->lastName)){
-                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
                 continue;
             }
             token = strtok(NULL, " \n");
             if(strcmp(token, per->country->name)){
-                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
                 continue;
             }
             token = strtok(NULL, " \n");
             if(atoi(token) != per->age){
-                fprintf(stderr, "ERROR: RECORD WITH ID %s ALREADY EXISTS\n\n", per->citizenID);
+                fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
                 continue;
             }
         }
@@ -161,7 +164,7 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
         }else if(!strcmp(token, "NO")){
             vaccinated = 0;
         }else{
-            fprintf(stderr, "ERROR: INCORRECT SYNTAX, SEE /help\n\n");
+            fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
             continue;
         }
 
@@ -183,13 +186,13 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
                 date->month = atoi(datetok2); 
                 date->year = atoi(datetok3);
             }else{
-                fprintf(stderr, "ERROR: INCORRECT RECORD IN INPUT FILE\n");
+                fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
                 free(date);
                 continue;
             }
         }else{
             if(token != NULL){
-                fprintf(stderr, "ERROR: INCORRECT RECORD IN INPUT FILE\n");
+                fprintf(stderr, "ERROR IN RECORD:\n%s\n", errLine);
                 continue; 
             } 
         }
@@ -204,6 +207,7 @@ void parseInputFile(char *filePath, int bloomSize, HTHash citizenRecords, HTHash
 
     fclose(inputFile);
     free(buf);
+    free(errLine);
 }
 
 // user input loop
