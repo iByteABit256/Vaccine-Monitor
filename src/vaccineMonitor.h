@@ -49,7 +49,7 @@ typedef struct vaccrecstr *VaccRecord;
 
 // Interface
 void insertCitizenRecord(VaccRecord, Virus);
-void vaccineStatusBloom(char *, Virus);
+int vaccineStatusBloom(char *, Virus);
 void vaccineStatus(char *, Virus, HTHash);
 void list_nonVaccinated_Persons(Virus, HTHash);
 void populationStatus(Virus, Date, Date, HTHash, char *);

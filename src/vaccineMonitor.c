@@ -28,7 +28,12 @@ void incrementAgeCounter(Country country, int age){
 void insertCitizenRecord(VaccRecord rec, Virus vir){
     if(rec->date == NULL){
         // Citizen is not vaccinated
-        skipInsert(vir->not_vaccinated_persons, rec->per->citizenID, rec);
+        if(!bloomExists(vir->vaccinated_bloom, rec->per->citizenID)){
+            skipInsert(vir->not_vaccinated_persons, rec->per->citizenID, rec);
+        }else{
+            Date d = rec->date;
+            printf("ERROR: CITIZEN %s ALREADY VACCINATED\n\n", rec->per->citizenID);
+        }
         //printf("Inserted %s to not-vaccinated list\n", rec->per->lastName);
     }else{
         // Citizen is vaccinated
@@ -49,15 +54,16 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
 }
 
 // check if citizen exists in virus bloom filter
-void vaccineStatusBloom(char *citizenID, Virus vir){
+int vaccineStatusBloom(char *citizenID, Virus vir){
     // virus doesn't exist
     if(vir == NULL){
         fprintf(stderr, "ERROR: NO INFORMATION ABOUT GIVEN VIRUS\n\n");
-        return;
+        return -1;
     }
 
     int vaccinated = bloomExists(vir->vaccinated_bloom, citizenID);
     printf("%s\n\n", vaccinated? "MAYBE" : "NOT VACCINATED");
+    return vaccinated;
 }
 
 // check if citizen exists in virus skiplist

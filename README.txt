@@ -45,9 +45,48 @@ and a short description.
 
 
 
+Assumptions
+------------
+
+In vaccineStatus, if a citizen is not in the
+vaccinated skiplist, they are considered unvaccinated.
+
+In list-nonVaccinated-Persons, only citizens that
+are recorded to be non-vaccinated are shown.
+
+The thought behind this is that, if used for a
+large dataset and you use list-nonVaccinated-Persons,
+you only want to know who needs to be vaccinated without
+question. On the contrary, vaccineStatus seems like it would
+be simpler to assume that someone is not vaccinated if they are
+inexistant in the records, because it would be extremely hard
+to keep track of every vaccine that hasn't been done for every
+citizen.
+
+That way, a citizen is recorded as not vaccinated when they're
+aiming to be vaccinated in the future and they show up in
+list-nonVaccinated-Persons without too much unneeded information.
+
+
 
 Invalid input checking
 -----------------------
+
+When a command is parsed, I check whether there are enough
+arguments and if they are valid. If the arguments weren't
+enough, or at least one of them was invalid, an error
+message is shown.
+
+Invalid arguments are any types of problematic input
+regarding their type. For example, the format of dates
+is checked so that an argument like "01//" is invalid.
+
+Another example is whether countries or viruses exist
+in the database or not. If they aren't and a query
+depends on them already existing, an error message is shown.
+For instance, popStatusByAge can't give any statistics if
+the virus is not already known, because we have no
+information about who is vaccinated or not.
 
 
 
