@@ -16,9 +16,16 @@
 /popStatusByAge GREECE COVID-19
 /popStatusByAge COVID-19
 /insertCitizenRecord 6669 IVAN BLYAT RUSSIA 31 COVID-19 YES 04-05-2021
-/insertCitizenRecord 6670 VLADIMIR LENOVICH 30 COVID-19 NO
-/vaccinateNow 6670 VLADIMIR LENOVICH 30 COVID-19
-/vaccinateNow 6671 NIKO BUSCHOVICH 31 COVID-19
+/insertCitizenRecord 6670 VLADIMIR LENOVICH RUSSIA 30 COVID-19 NO
+/vaccineStatus 6670 COVID-19
+/vaccinateNow 6670 VLADIMIR LENOVICH RUSSIA 30 COVID-19
+/vaccinateNow 6671 NIKO BUSCHOVICH RUSSIA 31 COVID-19
+/vaccineStatusBloom 6669 COVID-19
+/vaccineStatus 6669 COV
+/vaccineStatus 6669
+/vaccineStatusBloom 6670 COVID-19
+/vaccineStatus 6670 COVID-19
+/vaccineStatus 6670
 /list-nonVaccinated-Persons COVID-19
 /exit
 

@@ -5,6 +5,12 @@
 #define MIN(a,b) a < b? a : b
 
 
+// Deletes record and date, rest are dealt with in main
+void deleteRecord(VaccRecord rec){
+    free(rec->date);
+    free(rec);
+}
+
 // Initialize new country
 Country newCountry(char *name){
     Country country = malloc(sizeof(struct countrystr));
@@ -36,6 +42,7 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
             VaccRecord found = skipGet(vir->vaccinated_persons, rec->per->citizenID);
             if(found){
                 printf("ERROR: CITIZEN %s ALREADY VACCINATED\n\n", rec->per->citizenID);
+                deleteRecord(rec);
             }else{
                 skipInsert(vir->not_vaccinated_persons, rec->per->citizenID, rec);
             }
@@ -50,6 +57,7 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
             Date d = found->date;
             printf("ERROR: CITIZEN %s ALREADY VACCINATED ON %02d-%02d-%04d\n\n",
                     p->citizenID, d->day, d->month, d->year);
+            deleteRecord(rec);
         }else{
             // Citizen is inserted
             skipInsert(vir->vaccinated_persons, rec->per->citizenID, rec);

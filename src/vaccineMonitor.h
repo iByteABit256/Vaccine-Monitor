@@ -47,6 +47,8 @@ struct vaccrecstr{
 
 typedef struct vaccrecstr *VaccRecord;
 
+void deleteRecord(VaccRecord);
+
 // Interface
 void insertCitizenRecord(VaccRecord, Virus);
 int vaccineStatusBloom(char *, Virus);

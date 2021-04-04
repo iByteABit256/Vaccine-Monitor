@@ -354,6 +354,9 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                     populationStatus(vir, d1, d2, countries, NULL);
 
+                    free(d1);
+                    free(d2);
+
                 }else{
                     // Country given
 
@@ -409,6 +412,9 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }
 
                     populationStatus(vir, d1, d2, countries, par1);
+
+                    free(d1);
+                    free(d2);
                 }
 
             // popStatusByAge
@@ -477,6 +483,9 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
 
                     popStatusByAge(vir, d1, d2, countries, NULL);
 
+                    free(d1);
+                    free(d2);
+
                 }else{
                     // Country given
 
@@ -533,6 +542,9 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                     }
 
                     popStatusByAge(vir, d1, d2, countries, par1);
+
+                    free(d1);
+                    free(d2);
                 }
 
             // insertCitizenRecord
