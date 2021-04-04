@@ -24,14 +24,21 @@ void incrementAgeCounter(Country country, int age){
     country->ageCounter[MIN(age/20, 3)] += 1;
 }
 
-// insert new citizen record related to virus
+// Insert new citizen record related to virus
 void insertCitizenRecord(VaccRecord rec, Virus vir){
     if(rec->date == NULL){
         // Citizen is not vaccinated
+
+        // Confirm that citizen is not vaccinated, print error otherwise
         if(!bloomExists(vir->vaccinated_bloom, rec->per->citizenID)){
             skipInsert(vir->not_vaccinated_persons, rec->per->citizenID, rec);
         }else{
-            printf("ERROR: CITIZEN %s ALREADY VACCINATED\n\n", rec->per->citizenID);
+            VaccRecord found = skipGet(vir->vaccinated_persons, rec->per->citizenID);
+            if(found){
+                printf("ERROR: CITIZEN %s ALREADY VACCINATED\n\n", rec->per->citizenID);
+            }else{
+                skipInsert(vir->not_vaccinated_persons, rec->per->citizenID, rec);
+            }
         }
         //printf("Inserted %s to not-vaccinated list\n", rec->per->lastName);
     }else{
