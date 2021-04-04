@@ -1,0 +1,50 @@
+/vaccineStatusBloom 0001 COVID-19
+/vaccineStatusBlue
+/vaccineStatusBloom 0001
+/vaccineStatusBloom -0001 COVID-19
+/vaccineStatusBloom SARS-1
+/vaccineStatus 0001 COVID-19
+/vaccineStatue 0001 COVID-19
+/vaccineStatus COVID-19
+/vaccineStatus
+/vaccineStatus 0001 SARS-1
+/vaccineStatus 0001
+/populationStatus GREECE COVID-19 14-03-2000 22-04-2020
+/populationStatus GREECE COVID-19 01-01-1900 05-11-2000
+/populationStatus COVID-19 14-03-2000 22-04-2020
+/populationStatus COVID-19 01-01-1900 05-11-2000
+/populationStatus GREECE COVID-19
+/populationStatus COVID-19
+/populationStatus GREECE
+/populationStatus
+/populationStatus BLYAT COVID-19 14-03-2000 22-04-2020
+/populationStatus GREECE BLYAT 14-03-2000 22-04-2020
+/populationStatus GREECE COVID-19 13// foo
+/popStatusByAge GREECE COVID-19 14-03-2000 22-04-2020
+/popStatusByAge GREECE COVID-19 01-01-1900 05-11-2000
+/popStatusByAge COVID-19 14-03-2000 22-04-2020
+/popStatusByAge COVID-19 01-01-1900 05-11-2000
+/popStatusByAge GREECE COVID-19
+/popStatusByAge COVID-19
+/popStatusByAge GREECE
+/popStatusByAge
+/popStatusByAge BLYAT COVID-19 14-03-2000 22-04-2020
+/popStatusByAge GREECE BLYAT 14-03-2000 22-04-2020
+/popStatusByAge GREECE COVID-19 13// foo
+/insertCitizenRecord 6669 IVAN BLYAT RUSSIA 31 COVID-19 YES 04-05-2021
+/insertCitizenRecord 6669 IVAN BLYAT RUSSIA 31 COVID-19 YES 04-05-2021
+/insertCitizenRecord 6669 IVAN BLYAT RUSSIA 31 COVID-19 NO 
+/insertCitizenRecord 6669 IVAN BLYAT RUSSIA 31 COVID-19
+/insertCitizenRecord 6670 VLADIMIR LENOVICH 30 COVID-19 NO
+/vaccinateNow 6670 VLADIMIR LENOVICH 30 COVID-19
+/vaccinateNow 6670 VLADIMIR LENOVICH 30 COVID-19
+/vaccinateNow 6671 NIKO BUSCHOVICH 31 COVID-19
+/vaccinateNow
+/vaccinateNow 6671
+/vaccinateNow 6671 I AM 31 NOT-NIKO
+/vaccinateNow 6671 NIKO BUSCHOVICH 69 COVID-19
+/list-nonVaccinated-Persons COVID-19
+/list-nonVaccinated-Persons FOOBLA
+/list-nonVaccinated-Persons
+/exit
+

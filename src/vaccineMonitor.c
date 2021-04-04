@@ -31,7 +31,6 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
         if(!bloomExists(vir->vaccinated_bloom, rec->per->citizenID)){
             skipInsert(vir->not_vaccinated_persons, rec->per->citizenID, rec);
         }else{
-            Date d = rec->date;
             printf("ERROR: CITIZEN %s ALREADY VACCINATED\n\n", rec->per->citizenID);
         }
         //printf("Inserted %s to not-vaccinated list\n", rec->per->lastName);
