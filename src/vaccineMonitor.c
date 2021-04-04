@@ -50,6 +50,7 @@ void insertCitizenRecord(VaccRecord rec, Virus vir){
         //printf("Inserted %s to not-vaccinated list\n", rec->per->lastName);
     }else{
         // Citizen is vaccinated
+        
         VaccRecord found = skipGet(vir->vaccinated_persons, rec->per->citizenID);
         if(found){
             // Vaccination already recorded
@@ -206,7 +207,7 @@ void popStatusByAge(Virus vir, Date d1, Date d2, HTHash countries, char *country
     }
 
     // error if country not in records
-    if(!HTExists(countries, countryName)){
+    if(countryName != NULL && !HTExists(countries, countryName)){
         fprintf(stderr, "ERROR: NO INFORMATION ABOUT COUNTRY\n\n");
     }
 
