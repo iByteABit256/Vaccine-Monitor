@@ -90,6 +90,19 @@ information about who is vaccinated or not.
 
 
 
+Population percentages
+-----------------------
+
+Population percentages are calculated over the total
+population of the country (or age group accordingly), 
+regardless of what information we have about them.
+
+This seemed more intuitive than calculating the percentages
+over the number of people that have records involving a certain
+virus, since it's the way population percentages usually work
+in real life.
+
+
 
 Age population statistics
 --------------------------
