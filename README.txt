@@ -176,7 +176,8 @@ of it.
 Known Issues
 -------------
 
-If you give incorrect input, small memory leaks are created.
+If you give incorrect input except from the expected errors
+of the exercise, small memory leaks are created.
 This is due to the way that lines are parsed; words are split
 and memory is allocated in between, so freeing the memory after
 every error would make the code much larger and unreadable than it

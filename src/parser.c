@@ -735,6 +735,13 @@ void inputLoop(HTHash countries, HTHash viruses, HTHash citizenRecords, int bloo
                 rec->per = per;
                 rec->date = date;
 
+                VaccRecord old_rec = skipGet(vir->not_vaccinated_persons, per->citizenID);
+                if(old_rec){
+                    free(old_rec->date);
+                    free(old_rec);
+                    skipDelete(vir->not_vaccinated_persons, per->citizenID);
+                }
+
                 insertCitizenRecord(rec, vir);
 
             // vaccinateNow
